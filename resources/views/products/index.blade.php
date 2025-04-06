@@ -1,5 +1,5 @@
 <!-- resources/views/products/index.blade.php -->
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <style>

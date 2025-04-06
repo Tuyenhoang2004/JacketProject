@@ -17,6 +17,6 @@ class Catalog extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class, 'CatalogID'); // Chỉnh sửa cho đúng với tên cột
+        return $this->hasMany(Product::class, 'CategoryID', 'CatalogID'); // Đảm bảo khóa ngoại đúng
     }
 }

@@ -124,10 +124,17 @@ class ProductController extends Controller
         return view('products.create', compact('categories'));
     }
     public function show($id)
-        {
-            $product = Product::findOrFail($id); // Tìm sản phẩm theo ID
-            return view('products.show', compact('product')); // Trả về view với sản phẩm
-        }
+    {
+        $product = Product::where('ProductID', $id)->first();
+        $list_catalog = Catalog::all();
 
-    
+        // Lấy danh sách đánh giá của sản phẩm
+        $reviews = Review::where('ProductID', $id)->get();
+
+        return view('product.detail', [
+            'product' => $product,
+            'list_catalog' => $list_catalog,
+            'reviews' => $reviews,
+        ]);
+
 }
