@@ -5,58 +5,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Catalog;
+use App\Models\Review;
+use App\Models\Discount;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    
+    public function show($id)
+    {
+        $product = Product::with('discount')->findOrFail($id);
+        $list_catalog = Catalog::all();
+
+        // Lấy danh sách đánh giá của sản phẩm
+        $reviews = Review::where('ProductID', $id)->get();
+
+        return view('product.detail', [
+            'product' => $product,
+            'list_catalog' => $list_catalog,
+            'reviews' => $reviews,
+        ]);
+    }
+
     public function index(Request $request)
-{
-    $search = $request->input('search'); // Lấy giá trị tìm kiếm từ request
-    $products = Product::with('category')
-        ->when($search, function ($query, $search) {
-            return $query->where('ProductName', 'like', "%{$search}%")
-                         ->orWhere('Description', 'like', "%{$search}%");
-        })
-        ->paginate(10); // Phân trang với 10 sản phẩm mỗi trang
+    {
+        $search = $request->input('search'); // Lấy giá trị tìm kiếm từ request
+        $products = Product::with('category')
+            ->when($search, function ($query, $search) {
+                return $query->where('ProductName', 'like', "%{$search}%")
+                            ->orWhere('Description', 'like', "%{$search}%");
+            })
+            ->paginate(10); // Phân trang với 10 sản phẩm mỗi trang
 
-    $categories = Catalog::all(); // Lấy tất cả danh mục từ bảng Catalog
-    
-    return view('products.index', compact('products', 'categories', 'search'));
-}
-
+        $categories = Catalog::all(); // Lấy tất cả danh mục từ bảng Catalog
+        
+        return view('products.index', compact('products', 'categories', 'search'));
+    }
 
     public function store(Request $request)
-        {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'price' => 'required|numeric|min:0',
-                'quantity' => 'required|integer|min:0',
-                'category_id' => 'required|exists:catalog,CatalogID', // Kiểm tra CatalogID trong bảng catalog
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'category_id' => 'required|exists:catalog,CatalogID', // Kiểm tra CatalogID trong bảng catalog
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-            // Tạo sản phẩm mới
-            $product = new Product();
-            $product->ProductName = $request->name;
-            $product->Description = $request->description;
-            $product->Price = $request->price;
-            $product->Stock = $request->quantity;
-            $product->CategoryID = $request->category_id; // Lưu vào CatalogID
+        // Tạo sản phẩm mới
+        $product = new Product();
+        $product->ProductName = $request->name;
+        $product->Description = $request->description;
+        $product->Price = $request->price;
+        $product->Stock = $request->quantity;
+        $product->CategoryID = $request->category_id; // Lưu vào CatalogID
 
-            // Xử lý hình ảnh nếu có
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('', 'public');
-                $product->ImageURL = $imagePath;
-            }
-
-            $product->save();
-
-            return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm thành công!');
+        // Xử lý hình ảnh nếu có
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('', 'public');
+            $product->ImageURL = $imagePath;
         }
 
+        $product->save();
+
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm thành công!');
+    }
 
     public function destroy($id)
     {
@@ -86,7 +100,6 @@ class ProductController extends Controller
         $categories = Catalog::all();
         
         return view('products.edit', compact('product', 'categories'));
-        
     }
 
     public function update(Request $request, $id)
@@ -118,23 +131,10 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Bạn đã thay đổi thành công!');
     }
+
     public function create()
     {
         $categories = Catalog::all(); // Lấy danh sách danh mục
         return view('products.create', compact('categories'));
     }
-    public function show($id)
-    {
-        $product = Product::where('ProductID', $id)->first();
-        $list_catalog = Catalog::all();
-
-        // Lấy danh sách đánh giá của sản phẩm
-        $reviews = Review::where('ProductID', $id)->get();
-
-        return view('product.detail', [
-            'product' => $product,
-            'list_catalog' => $list_catalog,
-            'reviews' => $reviews,
-        ]);
-
 }
