@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Catalog;
 use App\Models\Review;
+use App\Models\Discount;
 class ProductController extends Controller
 {
 
 public function show($id)
 {
     $product = Product::where('ProductID', $id)->first();
+    $product = Product::with('discount')->findOrFail($id);
     $list_catalog = Catalog::all();
 
     // Lấy danh sách đánh giá của sản phẩm
