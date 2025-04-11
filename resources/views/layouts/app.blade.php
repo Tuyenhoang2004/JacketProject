@@ -8,19 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-    <body>
+<body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <div class="container mt-4">
-            @yield('content')
-        </div>
+    <div class="container mt-4">
+        @yield('content')
+    </div>
 
-        <footer style="
+    <footer style="
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: #343a40; /* màu nền đen đậm */
-        color: #ffffff; /* màu chữ trắng */
+        background-color: #343a40;
+        color: #ffffff;
         text-align: center;
         padding: 10px 0;
         z-index: 999;
@@ -29,32 +29,28 @@
         <a href="{{ url('admin/dashboard') }}" style="color: #ffc107; text-decoration: none;">
             Quay lại Trang Chủ
         </a>
-</footer>
-
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <style>
+        body {
+            margin: 0;
+            padding-bottom: 100px;
+            overflow-y: auto;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            line-height: 50px;
+        }
+    </style>
 </body>
 </html>
-<style>
-    body {
-        margin: 0;
-        padding-bottom: 100px; /* đủ cao để không bị footer che */
-        overflow-y: auto;
-    }
-
-    footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50px;
-        background-color: #333;
-        color: white;
-        text-align: center;
-        line-height: 50px;
-    }
-</style>
-
