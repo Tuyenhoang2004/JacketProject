@@ -152,7 +152,7 @@
             <div class="product-info">
                 <h2>{{ $product->ProductName }}</h2>
                 <p><b>Tồn kho:</b> {{ $product->Stock }}</p>
-                <p><b>Giảm giá:</b> {{ $product->DiscountValue }}%</p>
+                <p><b>Giảm giá:</b> {{ $product->discount->DiscountValue ?? '0' }}%</p>
                 <p><b>Giá gốc:</b> <span class="price">{{ number_format($product->Price, 0, ",", ".") }} VNĐ</span></p>
 
                 <form method="POST" action="{{ route('cart.add') }}" class="product-options">
