@@ -2,25 +2,39 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory; 
-use Illuminate\Database\Eloquent\Model; 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model 
-{ 
-    protected $table = 'products'; 
-    protected $primaryKey = 'ProductID'; 
-    public $timestamps = false; 
-    protected $fillable = [ 
-        'ProductName', 
-        'Description', 
-        'Price', 
-        'Stock', 
-        'CategoryegoryID', // Đảm bảo tên trường trùng khớp
+class Product extends Model
+{
+    use HasFactory;
+
+    protected $table = 'products';
+    protected $primaryKey = 'ProductID';
+    public $timestamps = false;
+
+    protected $fillable = [
+        'ProductName',
+        'Description',
+        'Price',
+        'Stock',
+        'CategoryID',
+        'Discount',
         'ImageURL'
-    ]; 
+    ];
 
-    public function category() 
-    { 
-        return $this->belongsTo(Catalog::class, 'CategoryID', 'CatalogID'); // Sử dụng CatalogID
-    } 
+    public function category()
+    {
+        return $this->belongsTo(Catalog::class, 'CategoryID', 'CatalogID');
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'orderdetails', 'ProductID', 'OrderID');
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetails::class, 'ProductID', 'ProductID');
+    }
 }
