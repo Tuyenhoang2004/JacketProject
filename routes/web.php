@@ -9,6 +9,12 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 
+/*
+|---------------------------------------------------------------------------
+| Web Routes
+|---------------------------------------------------------------------------
+*/
+
 // --- FRONTEND ROUTES ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
@@ -23,12 +29,7 @@ Route::post('/review', [ReviewController::class, 'store'])->name('review.store')
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
 
-// --- ADMIN ROUTES ---
-// Products
-Route::resource('products', ProductController::class);
-Route::put('/products/{ProductID}/update-stock', [ProductController::class, 'updateStock'])->name('products.updateStock');
-
-// Dashboard
+// =================== ADMIN ===================
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
 // Orders
@@ -46,3 +47,8 @@ Route::prefix('admin/users')->group(function () {
     Route::put('/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 });
+
+// Products
+Route::resource('products', ProductController::class);
+Route::put('/products/{ProductID}/update-stock', [ProductController::class, 'updateStock'])->name('products.updateStock');
+

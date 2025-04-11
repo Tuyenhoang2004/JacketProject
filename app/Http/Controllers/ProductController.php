@@ -137,4 +137,5 @@ class ProductController extends Controller
         $categories = Catalog::all(); // Lấy danh sách danh mục
         return view('products.create', compact('categories'));
     }
+
 }

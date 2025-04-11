@@ -68,15 +68,48 @@
             display: table;
             clear: both;
         }
+
+        body {
+            margin: 0;
+            padding-bottom: 100px;
+            overflow-y: auto;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            line-height: 50px;
+        }
     </style>
 </head>
 <body>
-    <div class="container" style="padding: 20px 0;">
+    <div class="container mt-4">
         @yield('content')
     </div>
 
-    <footer>
-        <p>&copy; {{ date('Y') }} Jacket Shop. All rights reserved.</p>
+    <footer style="
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #343a40;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 999;
+    ">
+        © {{ date('Y') }} Jacket Shop. All rights reserved. |
+        <a href="{{ url('admin/dashboard') }}" style="color: #ffc107; text-decoration: none;">
+            Quay lại Trang Chủ
+        </a>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+=======
+>>>>>>> c45417a (Resolve merge conflicts after pulling from origin develop)
 use Illuminate\Database\Eloquent\Model;
 
 class Catalog extends Model
 {
+<<<<<<< HEAD
     use HasFactory;
 
     protected $table = 'catalog'; // Đảm bảo tên bảng là đúng
@@ -20,3 +24,4 @@ class Catalog extends Model
         return $this->hasMany(Product::class, 'CategoryID', 'CatalogID'); // Đảm bảo khóa ngoại đúng
     }
 }
+
