@@ -16,14 +16,15 @@ class Product extends Model
     protected $fillable = ['ProductName', 'Description', 'Price', 'Stock', 'CategoryID', 'Discount', 'ImageURL'];
 
     public function orders()
-    {
-        return $this->belongsToMany(Order::class, 'orderdetails', 'ProductID', 'OrderID');
-    }
+        {
+            return $this->belongsToMany(Order::class, 'orderdetails', 'ProductID', 'OrderID');
+        }
     public function orderDetails()
-{
-    return $this->hasMany(OrderDetails::class, 'ProductID', 'ProductID');
-}
-
-
-
+        {
+            return $this->hasMany(OrderDetails::class, 'ProductID', 'ProductID');
+        }
+    public function discount()
+        {
+            return $this->belongsTo(Discount::class, 'DiscountID', 'DiscountID');
+        }
 }
