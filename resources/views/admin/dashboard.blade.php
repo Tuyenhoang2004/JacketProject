@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Admin Dashboard')
 
@@ -13,7 +13,7 @@
 <div class="menu">
     <ul>
         <li><a href="{{ url('admin/dashboard') }}">Thống kê</a></li>
-        <li><a href="{{ url('admin/products') }}">Quản lý Sản phẩm</a></li>
+        <li><a href="{{ url('products') }}">Quản lý Sản phẩm</a></li>
         <li class="order-menu">
             <a href="#">Quản lý Đơn hàng</a>
             <ul class="dropdown-menu">
