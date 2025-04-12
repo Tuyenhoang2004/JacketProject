@@ -79,6 +79,18 @@ public function destroy($id)
     DB::table('users')->where('UserID', $id)->delete();
     return redirect()->route('user.index')->with('success', 'Xóa người dùng thành công!');
 }
+public function logout(Request $request)
+    {
+        // Đăng xuất người dùng
+        Auth::logout();
+
+        // Xóa thông tin trong session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // Chuyển hướng người dùng về trang chủ
+        return redirect('/');
+    }
 
 
 
