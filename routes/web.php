@@ -30,7 +30,7 @@ Route::post('/review', [ReviewController::class, 'store'])->name('review.store')
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
 
 // --- ADMIN ROUTES ---
-Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
 // Orders
 Route::get('admin/statistics', [OrderController::class, 'statistics'])->name('admin.statistics');

@@ -1,13 +1,11 @@
 @extends('layouts.admin')
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 @section('title', 'Admin Dashboard')
 
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Welcome Section -->
-<div class="container mt-5">
-    <h1 class="text-center mb-2">Welcome to Admin Dashboard</h1>
-</div>
+
 
 <!-- Navbar -->
 <div class="menu">
@@ -23,58 +21,60 @@
         </li>
         <li><a href="{{ route('user.index') }}">Quản lý Người dùng</a></li>
         <li class="user-menu">
-            @if(Session::has('UserPhone'))
-                <a href="#" class="fa fa-user"></a>
-                <ul class="dropdown-menu">
-                    <li>Xin chào {{ Session::get('UserName') }}!</li>
-                    <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
-                </ul>
-            @else
-                <a href="#" class="fa fa-user"></a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{ url('signin') }}">Đăng nhập</a></li>
-                    <li><a href="{{ url('signup') }}">Đăng ký</a></li>
-                </ul>
-            @endif
+            <a href="#" class="fa fa-user" onclick="return false;"></a>
+            <ul class="dropdown-menu">
+                @if(Auth::check())
+                    <li style="padding: 8px 15px; font-weight: bold;">
+                        Hello, {{ Auth::user()->UserName }}
+                    </li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="logout-btn">Đăng xuất</button>
+                        </form>
+                    </li>
+                @else
+                    <li><a href="{{ route('login') }}">Đăng nhập</a></li>
+                    <li><a href="{{ route('register') }}">Đăng ký</a></li>
+                @endif
+            </ul>
+
         </li>
     </ul>
 </div>
-
+<br>
+<h2 class="text-center mb-4">Thống kê hệ thống bán hàng</h2>
 <div class="container">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5>Tổng đơn hàng</h5>
-                    <p class="fs-4">{{ $totalOrders }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5>Tổng doanh thu</h5>
-                    <p class="fs-4">{{ number_format($totalRevenue, 0, ',', '.') }}₫</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-dark">
-                <div class="card-body">
-                    <h5>Người dùng</h5>
-                    <p class="fs-4">{{ $totalUsers }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <h5>Sản phẩm</h5>
-                    <p class="fs-4">{{ $totalProducts }}</p>
-                </div>
-            </div>
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="stat-card bg-soft-blue">
+            <div class="stat-icon"><i class="bi bi-bag-check-fill"></i></div>
+            <h5>Tổng đơn hàng</h5>
+            <p class="fs-4">{{ $totalOrders }}</p>
         </div>
     </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-soft-green">
+            <div class="stat-icon"><i class="bi bi-currency-dollar"></i></div>
+            <h5>Tổng doanh thu</h5>
+            <p class="fs-4">{{ number_format($totalRevenue, 0, ',', '.') }}₫</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-soft-yellow">
+            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+            <h5>Người dùng</h5>
+            <p class="fs-4">{{ $totalUsers }}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-soft-pink">
+            <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+            <h5>Sản phẩm</h5>
+            <p class="fs-4">{{ $totalProducts }}</p>
+        </div>
+    </div>
+</div>
 </div>
     <div class="row mt-5">
         <div class="col-md-12">
@@ -224,23 +224,66 @@
         font-size: 18px;
         margin-top: 10px;
     }
-    .card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-}
+    .stat-card {
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        padding: 20px;
+        color: #333;
+        text-align: center;
+        height: 150px; /* Hoặc điều chỉnh chiều cao tuỳ thích */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid black;
+    }
 
-.card img {
-    transition: transform 0.3s ease;
-}
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
 
-.card:hover img {
-    transform: scale(1.05);
-}
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    .fs-4 {
+        font-weight: bold;
+        font-size: 1.75rem;
+    }
+
+    .bg-soft-blue {
+        background-color: #d0ebff;
+    }
+
+    .bg-soft-green {
+        background-color: #d3f9d8;
+    }
+
+    .bg-soft-yellow {
+        background-color: #fff3bf;
+    }
+
+    .bg-soft-pink {
+        background-color: #ffdce0;
+    }
 
 </style>
+<form method="GET" action="{{ route('admin.dashboard') }}" class="d-flex justify-content-end align-items-center mb-3">
+    <label for="year" class="me-2 fw-bold">Chọn năm:</label>
+    <select name="year" id="year" class="form-select w-auto" onchange="this.form.submit()">
+        @foreach ($years as $year)
+            <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+        @endforeach
+    </select>
+</form>
 
+<h4 class="text-center mb-4">Biểu đồ doanh thu theo tháng</h4>
+<hr style="border: none; height: 4px; background: linear-gradient(to right, #4e54c8, #8f94fb); border-radius: 4px; margin: 30px 0;">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<canvas id="revenueChart"></canvas>
 <script>
     const ctx = document.getElementById('revenueChart').getContext('2d');
     const revenueChart = new Chart(ctx, {
@@ -271,13 +314,36 @@
 <div class="mt-5">
     <h2 class="text-center mb-4">Top 5 Sản Phẩm Bán Chạy</h2>
     <div class="row justify-content-center">
-        @foreach($topProducts as $product)
-            <div class="col-md-4 col-lg-3 mb-4">
+        <!-- 3 sản phẩm trên -->
+        @foreach($topProducts->take(3) as $product)
+            <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0 rounded-4">
-                    <img src="{{ asset('image/' . $product->image_url) }}"
-                         class="card-img-top rounded-top-4"
-                         alt="{{ $product->name }}"
-                         style="height: 200px; object-fit: cover;">
+                    <div class="card-img-wrapper">
+                        <img src="{{ asset('image/' . $product->image_url) }}"
+                             class="card-img-top rounded-top-4"
+                             alt="{{ $product->name }}"
+                             style="width: 100%; height: 200px; object-fit: cover;">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title mb-2">{{ $product->name }}</h5>
+                        <p class="text-muted mb-0">Đã bán: <strong>{{ $product->sold_quantity }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <!-- 2 sản phẩm dưới -->
+        @foreach($topProducts->skip(3)->take(2) as $product)
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4">
+                    <div class="card-img-wrapper">
+                        <img src="{{ asset('image/' . $product->image_url) }}"
+                             class="card-img-top rounded-top-4"
+                             alt="{{ $product->name }}"
+                             style="width: 100%; height: 200px; object-fit: cover;">
+                    </div>
                     <div class="card-body text-center">
                         <h5 class="card-title mb-2">{{ $product->name }}</h5>
                         <p class="text-muted mb-0">Đã bán: <strong>{{ $product->sold_quantity }}</strong></p>
@@ -287,6 +353,7 @@
         @endforeach
     </div>
 </div>
+
 
 
 </div>

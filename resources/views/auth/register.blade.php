@@ -1,9 +1,7 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
+            
         </x-slot>
 
         <!-- Validation Errors -->
@@ -11,7 +9,7 @@
 
         <form method="POST" action="{{ route('register') }}">
     @csrf
-
+    <h1 style="text-align: center; font-size: 28px; font-weight: bold;">ĐĂNG KÝ</h1>
     <!-- Name -->
     <div>
         <x-label for="name" :value="__('Name')" />

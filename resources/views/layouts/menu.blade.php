@@ -34,38 +34,62 @@
         }
 
         .menu li a:hover {
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             color: black;
         }
 
         .menu li a.active {
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             color: black;
         }
 
         .user-menu {
-            position: relative;
+        position: relative;
+        display: inline-block;
         }
 
         .user-menu .dropdown-menu {
-            padding: 5px 0;
-            border-radius: 8px;
-            min-width: 180px;
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: white;
+            min-width: 160px;
+            padding: 10px 0;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        .user-menu .dropdown-menu li {
+        .user-menu:hover .dropdown-menu {
+            display: block;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 3px;
+            color: red;
             padding: 8px 15px;
-            font-size: 14px;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
         }
 
-        .user-menu .dropdown-menu li a {
-            color: #333;
-            transition: background-color 0.2s;
+        .dropdown-menu li {
+            padding: 8px 15px;
+            color: black;
+            font-weight: bold;
         }
 
-        .user-menu .dropdown-menu li a:hover,
-        .user-menu .dropdown-menu .logout-btn:hover {
-            background-color: #f7f7f7;
+        .dropdown-menu li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: #333;
         }
 
         .logout-btn {
@@ -80,7 +104,7 @@
         }
 
         .logout-btn:hover {
-            color: #c9302c;
+            color:rgb(120, 9, 5);
         }
 
 
@@ -98,14 +122,15 @@
         .search-container button {
             padding: 5px 10px;
             border: none;
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             border-radius: 0 5px 5px 0;
             cursor: pointer;
         }
 
         .search-container button:hover {
-            background-color: #e0a800;
+            background-color: rgb(252, 5, 141);
         }
+        
     </style>
 
     <ul>

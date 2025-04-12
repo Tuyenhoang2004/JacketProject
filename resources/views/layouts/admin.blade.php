@@ -16,21 +16,22 @@
 
     <style>
         body {
-            margin: 0;
-            padding-bottom: 100px;
-            overflow-y: auto;
-        }
+        margin: 0;
+        padding-bottom: 50px; /* Giữ một khoảng cách cho footer */
+        overflow-y: auto;
+    }
 
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #343a40;
-            color: #ffffff;
-            text-align: center;
-            padding: 10px 0;
-            z-index: 999;
-        }
+    footer {
+        position: relative;  /* Không cố định nữa */
+        bottom: 0;
+        width: 100%;
+        background-color: #343a40;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 999;
+    }
+
 
         footer a {
             color: #ffc107;

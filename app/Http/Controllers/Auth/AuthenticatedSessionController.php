@@ -27,13 +27,21 @@ class AuthenticatedSessionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(LoginRequest $request)
-    {
-        $request->authenticate();
-
+{
+    if (Auth::attempt(['UserEmail' => $request->UserEmail, 'password' => $request->password], $request->remember)) {
         $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        $user = Auth::user();
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect('/');
+        }
     }
+
+    return back()->withErrors(['UserEmail' => 'Thông tin đăng nhập không đúng.']);
+}
+
 
     /**
      * Destroy an authenticated session.
