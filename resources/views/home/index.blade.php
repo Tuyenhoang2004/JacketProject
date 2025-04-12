@@ -168,6 +168,9 @@
 <body>
 
 
+
+
+
 @if($products->isEmpty())
     <p>Không tìm thấy sản phẩm nào phù hợp với từ khóa "<strong>{{ request('search') }}</strong>".</p>
 @endif

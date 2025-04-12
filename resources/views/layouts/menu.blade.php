@@ -48,37 +48,41 @@
         }
 
         .user-menu .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 10px 0;
-            list-style: none;
-            min-width: 150px;
-            z-index: 999;
-        }
-
-        .user-menu:hover .dropdown-menu {
-            display: block;
+            padding: 5px 0;
+            border-radius: 8px;
+            min-width: 180px;
         }
 
         .user-menu .dropdown-menu li {
-            padding: 1px 8px;
+            padding: 8px 15px;
+            font-size: 14px;
         }
 
         .user-menu .dropdown-menu li a {
-            text-decoration: none;
-            color: black;
-            display: block;
-            font-size: 13px;
+            color: #333;
+            transition: background-color 0.2s;
         }
 
-        .user-menu .dropdown-menu li a:hover {
-            background-color: #f0f0f0;
+        .user-menu .dropdown-menu li a:hover,
+        .user-menu .dropdown-menu .logout-btn:hover {
+            background-color: #f7f7f7;
         }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #d9534f;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+            width: 100%;
+            padding: 0;
+        }
+
+        .logout-btn:hover {
+            color: #c9302c;
+        }
+
 
         .search-box {
             display: flex;
@@ -128,16 +132,24 @@
         </li>
 
         <li class="user-menu">
-            <a href="#" class="fa fa-user"></a>
+            <a href="#" class="fa fa-user" onclick="return false;"></a>
             <ul class="dropdown-menu">
-                @if (session('UserPhone'))
-                    <li>Xin chào {{ session('UserName') }}!</li>
-                    <li><a href="{{ route('logout') }}">Đăng xuất</a></li>
+                @if(Auth::check())
+                    <li style="padding: 8px 15px; font-weight: bold;">
+                        Hello, {{ Auth::user()->UserName }}
+                    </li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="logout-btn">Đăng xuất</button>
+                        </form>
+                    </li>
                 @else
-                    <li><a href="{{ route('signin') }}">Đăng nhập</a></li>
-                    <li><a href="{{ route('signup') }}">Đăng ký</a></li>
+                    <li><a href="{{ route('login') }}">Đăng nhập</a></li>
+                    <li><a href="{{ route('register') }}">Đăng ký</a></li>
                 @endif
             </ul>
+
         </li>
 
         <li>

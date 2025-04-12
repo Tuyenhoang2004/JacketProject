@@ -22,8 +22,9 @@ Route::get('/signin', fn () => view('signin'))->name('signin');
 Route::get('/signup', fn () => view('signup'))->name('signup');
 Route::get('/cart', fn () => view('cart'))->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
+// Reviews
 Route::get('/review', [ReviewController::class, 'create'])->name('review.create');
 Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
@@ -50,3 +51,10 @@ Route::prefix('admin/users')->group(function () {
 // Products (quản lý sản phẩm)
 Route::resource('products', ProductController::class);
 Route::put('/products/{ProductID}/update-stock', [ProductController::class, 'updateStock'])->name('products.updateStock');
+
+// Authenticated dashboard
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';

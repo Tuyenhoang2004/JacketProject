@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+=======
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,29 +19,35 @@
             margin: 0;
             padding: 0;
         }
+>>>>>>> 75cae8e632b89ebb3349c0380398ac838d0e2b3a
 
-        header {
-            background-color: #222;
-            color: #fff;
-            padding: 10px 0;
-        }
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
-        .container {
-            width: 90%;
-            margin: 0 auto;
-        }
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 15px;
-        }
+        <!-- Scripts -->
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+<script src="{{ asset('js/app.js') }}" defer></script>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
 
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-        }
+            <!-- Page Heading -->
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
+                </div>
+            </header>
 
+<<<<<<< HEAD
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
+    </body>
+=======
         footer {
             background-color: #222;
             color: #fff;
@@ -92,4 +105,5 @@
     </footer>
 
 </body>
+>>>>>>> 75cae8e632b89ebb3349c0380398ac838d0e2b3a
 </html>
