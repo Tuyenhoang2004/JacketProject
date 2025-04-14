@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Catalog;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,8 +25,15 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot(): void
-{
-    $list_catalog = Catalog::all();
-    View::share('list_catalog', $list_catalog);
-}
+    {
+        // Lấy danh sách catalog và chia sẻ với các view
+        $list_catalog = Catalog::all();
+        View::share('list_catalog', $list_catalog);
+
+        // Lắng nghe các truy vấn SQL và ghi log
+        DB::listen(function ($query) {
+            \Log::info($query->sql);
+            \Log::info($query->bindings);
+        });
+    }
 }

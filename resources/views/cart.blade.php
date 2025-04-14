@@ -85,7 +85,7 @@
             </tbody>
         </table>
         <div style="text-align: right; margin-top: 20px;">
-            <a href="{{ route('checkout') }}" class="btn-thanh-toan">Thanh toán</a>
+            <a href="{{ route('checkout.index') }}" class="btn-thanh-toan">Thanh toán</a>
         </div>
 
     @else
