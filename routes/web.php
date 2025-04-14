@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,16 +35,18 @@ Route::get('/clear-cart', function () {
 Route::get('/review', [ReviewController::class, 'create'])->name('review.create');
 Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 
-Route::get('/checkout', function () {
-    return 'Đây là trang thanh toán';
-})->name('checkout');
+// Bước 2: Xác nhận thông tin vận chuyển (POST)
+Route::post('/checkout/confirm-shipping', [CheckoutController::class, 'confirmShipping'])->name('checkout.confirmShipping');
 
 
-Route::get('/signin', fn () => view('signin'))->name('signin');
-Route::get('/signup', fn () => view('signup'))->name('signup');
-Route::get('/cart', fn () => view('cart'))->name('cart');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+
+// Bước 3: Xử lý thanh toán (POST)
+Route::post('/checkout/process-payment', [CheckoutController::class, 'processPayment'])->name('checkout.processPayment');
+
+// Trang thông báo thanh toán thành công
+Route::get('/checkout/success', fn() => view('checkout_success'))->name('checkout.success');
 
 // Reviews
 Route::get('/review', [ReviewController::class, 'create'])->name('review.create');

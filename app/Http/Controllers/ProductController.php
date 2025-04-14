@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Catalog;
 use App\Models\Review;
-use DB;
 use App\Models\Discount;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;

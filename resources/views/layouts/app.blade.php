@@ -36,12 +36,17 @@
         }
 
         footer {
-            background-color: #222;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    margin-top: 40px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
 
         .search-bar {
             float: right;
@@ -75,8 +80,6 @@
         @yield('content')
     </div>
 
-    <footer>
-        <p>&copy; {{ date('Y') }} Jacket Shop. All rights reserved.</p>
-    </footer>
+    
 </body>
 </html>
