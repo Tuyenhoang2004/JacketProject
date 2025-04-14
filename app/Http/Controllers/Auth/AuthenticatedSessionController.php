@@ -27,20 +27,23 @@ class AuthenticatedSessionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(LoginRequest $request)
-{
-    if (Auth::attempt(['UserEmail' => $request->UserEmail, 'password' => $request->password], $request->remember)) {
-        $request->session()->regenerate();
+    {
+        
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            $request->session()->regenerate();
 
-        $user = Auth::user();
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } else {
-            return redirect('/');
+            $user = Auth::user();
+            
+
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect('/');
+            }
         }
-    }
 
-    return back()->withErrors(['UserEmail' => 'Thông tin đăng nhập không đúng.']);
-}
+        return back()->withErrors(['email' => 'Thông tin đăng nhập không đúng.']);
+    }
 
 
     /**
@@ -58,5 +61,6 @@ class AuthenticatedSessionController extends Controller
 
     return redirect('/');
 }
+
 
 }

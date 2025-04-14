@@ -30,28 +30,28 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'UserEmail' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'UserPhone' => ['nullable', 'string', 'max:15'],
-            'UserAddress' => ['nullable', 'string', 'max:128'],
-        ]);
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], // ✅ Đã sửa từ UserEmail -> email
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        'UserPhone' => ['nullable', 'string', 'max:15'],
+        'UserAddress' => ['nullable', 'string', 'max:128'],
+    ]);
 
-        // Tạo người dùng mới
-        $user = User::create([
-            'UserName' => $request->name,
-            'UserEmail' => $request->UserEmail,
-            'UserPassword' => Hash::make($request->password),
-            'UserPhone' => $request->UserPhone ?? null,
-            'UserAddress' => $request->UserAddress ?? null,
-        ]);
+    // Tạo người dùng mới
+    $user = User::create([
+        'UserName' => $request->name,
+        'email' => $request->email, // ✅ Cột mới trong DB là 'email'
+        'UserPassword' => Hash::make($request->password),
+        'UserPhone' => $request->UserPhone ?? null,
+        'UserAddress' => $request->UserAddress ?? null,
+    ]);
 
-        // Đăng nhập người dùng
-        Auth::login($user);
+    // Đăng nhập người dùng
+    Auth::login($user);
 
-        // Chuyển hướng về trang chủ hoặc nơi bạn muốn
-        return redirect()->route('home'); // Hoặc bạn có thể thay '/home' thành bất kỳ URL nào bạn muốn
-    }
+    return redirect()->route('home');
+}
+
 }

@@ -41,7 +41,7 @@
                 <tr>
                     <td>{{ $user->UserID }}</td>
                     <td>{{ $user->UserName }}</td>
-                    <td>{{ $user->UserEmail }}</td>
+                    <td>{{ $user->email }}</td>
                     <td>{{ $user->UserPhone }}</td>
                     <td>{{ $user->UserAddress }}</td>
                     <td>{{ $user->role ?? 'user' }}</td>
