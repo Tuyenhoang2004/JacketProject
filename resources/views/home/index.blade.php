@@ -55,7 +55,7 @@
 
         .item .btn {
             display: inline-block;
-            background-color: #FFD73B;
+            background-color: rgb(252, 5, 141);
             color: black;
             padding: 5px 10px;
             border-radius: 5px;
@@ -99,12 +99,12 @@
         }
 
         .menu li a:hover {
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             color: black;
         }
 
         .menu li a.active {
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             color: black;
         }
         .user-menu {
@@ -163,9 +163,21 @@
             background-color: #007bff;
             color: #fff;
         }
+        .product-name {
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Số dòng muốn hiển thị */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            }
+
     </style>
 </head>
 <body>
+
+
+
 
 
 @if($products->isEmpty())
@@ -178,9 +190,7 @@
             <div class="item">
                 <a href="{{ url('product/'.$row->ProductID) }}">
                     <img src="{{ asset('image/' . $row->ImageURL) }}" alt="{{ $row->ProductName }}">
-                    <b>
-                        {{ strlen($row->ProductName) > 30 ? substr($row->ProductName, 0, 30).'...' : $row->ProductName }}
-                    </b><br>
+                    <b class="product-name">{{ $row->ProductName }}</b><br>
                     <i>{{ number_format($row->Price, 0, ',', '.') }} VNĐ</i><br>
                     <button class="btn">Xem chi tiết</button>
                 </a>

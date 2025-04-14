@@ -73,8 +73,8 @@
     }
 
     .btn-primary {
-        background-color: #FFBA28;
-        color: white;
+        background-color: rgb(252, 5, 141);
+        color: black;
         border: none;
         padding: 10px 20px;
         margin-top: 15px;
@@ -84,8 +84,9 @@
         transition: background-color 0.3s ease;
     }
 
-    .btn-primary:hover {
-        background-color: #e6890d;
+    .btn-primary:hover{
+        background-color: rgb(244, 95, 16);
+        color: white;
     }
 
     .product-description {
@@ -113,7 +114,7 @@
     }
 
     .btn-review:hover {
-        background-color: #e6890d;
+        background-color: rgb(244, 95, 16);
         color: black;
     }
 
@@ -152,7 +153,7 @@
             <div class="product-info">
                 <h2>{{ $product->ProductName }}</h2>
                 <p><b>Tồn kho:</b> {{ $product->Stock }}</p>
-                <p><b>Giảm giá:</b> {{ $product->discount->DiscountValue ?? '0' }}%</p>
+                <p><b>Giảm giá:</b> {{ $product->DiscountValue }}%</p>
                 <p><b>Giá gốc:</b> <span class="price">{{ number_format($product->Price, 0, ",", ".") }} VNĐ</span></p>
 
                 <form method="POST" action="{{ route('cart.add') }}" class="product-options">
