@@ -32,6 +32,9 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+        .user-menu:hover .dropdown-menu li a {
+            color: black;
+        }
 
         .menu li a:hover {
             background-color: rgb(252, 5, 141);
