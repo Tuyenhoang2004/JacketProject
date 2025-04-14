@@ -4,6 +4,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @include('layouts.menu') {{-- Sử dụng header đã tạo --}}
 <br>
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 
 <style>
     body {
@@ -85,7 +91,7 @@
     }
 
     .btn-primary:hover{
-        background-color: rgb(244, 95, 16);
+        background-color: rgb(252, 5, 141);
         color: white;
     }
 
@@ -114,7 +120,7 @@
     }
 
     .btn-review:hover {
-        background-color: rgb(244, 95, 16);
+        background-color: rgb(252, 5, 141);
         color: black;
     }
 
@@ -185,13 +191,24 @@
         </div>
 
         <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => request()->fullUrl()]) }}" class="btn-review">Đánh giá sản phẩm</a>
+   
+        
 
         @if(count($reviews) > 0)
             <div class="reviews-container">
                 @foreach($reviews as $review)
                     <div class="review-item">
-                        <p><strong>{{ $review->UserName }}</strong> - {{ \Carbon\Carbon::parse($review->ReviewDate)->format('d/m/Y') }}</p>
-                        <p class="rating">{!! str_repeat('★', $review->Rating) . str_repeat('☆', 5 - $review->Rating) !!}</p>
+                        <!-- Hiển thị tên người dùng -->
+                         
+                        <p><strong>{{ $review->user->UserName ?? 'Người dùng' }}</strong>
+                        - {{ \Carbon\Carbon::parse($review->ReviewDate)->format('d/m/Y') }}</p>
+                        
+                        <!-- Hiển thị đánh giá sao -->
+                        <p class="rating">
+                            {!! str_repeat('★', $review->Rating) . str_repeat('☆', 5 - $review->Rating) !!}
+                        </p>
+                        
+                        <!-- Hiển thị nhận xét -->
                         <p><strong>Nhận xét:</strong> {!! nl2br(e($review->Comment)) !!}</p>
                     </div>
                     <hr>
@@ -200,6 +217,7 @@
         @else
             <p>Chưa có đánh giá cho sản phẩm này.</p>
         @endif
+
     @endif
 </div>
 @endsection

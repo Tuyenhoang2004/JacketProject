@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Review;
 use App\Models\Catalog;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ReviewController extends Controller
@@ -31,25 +32,31 @@ class ReviewController extends Controller
     }
 
     // Lưu đánh giá từ form
+   
+
     public function store(Request $request)
     {
-        $list_catalog = Catalog::all();
         $request->validate([
             'product_id' => 'required|exists:products,ProductID',
-            'user_name' => 'required|string|max:255',
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string',
+            'comment' => 'required|string',
         ]);
-
-        $review = new Review();
-        $review->ProductID = $request->input('product_id');
-        $review->UserName = $request->input('user_name');
-        $review->Rating = $request->input('rating');
-        $review->Comment = $request->input('comment');
-        $review->ReviewDate = now();
-        $review->save();
-
-        return redirect($request->input('back_url', route('home')))
-               ->with('success', 'Cảm ơn bạn đã đánh giá sản phẩm!');
+    
+        $user = Auth::user();
+        $userID = $user->UserID;
+    
+        Review::create([
+            'ProductID' => $request->product_id,
+            'UserID' => $user->UserID, // hoặc Auth::id() nếu đúng cột là UserID
+            'Rating' => $request->rating,
+            'Comment' => $request->comment,
+            'ReviewDate' => now(),
+        ]);
+    
+        return redirect()->route('product.detail', ['id' => $request->product_id])
+                         ->with('success', 'Đánh giá đã được gửi!');
     }
+    
+
+
 }

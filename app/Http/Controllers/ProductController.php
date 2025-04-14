@@ -14,25 +14,33 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     public function show($id)
-    {
-        $product = DB::table('products')
+{
+    // Truy vấn sản phẩm kết hợp với bảng discount
+    $product = DB::table('products')
         ->leftJoin('discount', 'products.DiscountID', '=', 'discount.DiscountID')
         ->select('products.*', 'discount.DiscountValue', 'discount.StartDate', 'discount.EndDate')
         ->where('products.ProductID', $id)
-        ->first();
-
-
-        $list_catalog = Catalog::all();
-
-        // Lấy danh sách đánh giá của sản phẩm
-        $reviews = Review::where('ProductID', $id)->get();
-
-        return view('product.detail', [
-            'product' => $product,
-            'list_catalog' => $list_catalog,
-            'reviews' => $reviews,
-        ]);
+        ->first(); // Lấy một bản ghi duy nhất
+    
+    // Kiểm tra nếu không tìm thấy sản phẩm
+    if (!$product) {
+        abort(404, 'Sản phẩm không tồn tại');
     }
+
+    // Lấy danh sách catalog (nếu cần thiết)
+    $list_catalog = Catalog::all();
+
+    // Lấy danh sách đánh giá của sản phẩm, với eager loading cho quan hệ 'user'
+    $reviews = Review::where('ProductID', $id)->with('user')->get();
+   
+    // Trả về view với dữ liệu
+    return view('product.detail', [
+        'product' => $product,
+        'list_catalog' => $list_catalog,
+        'reviews' => $reviews,
+    ]);
+}
+
 
 
     public function index(Request $request)
@@ -140,4 +148,6 @@ class ProductController extends Controller
         $categories = Catalog::all();
         return view('products.create', compact('categories'));
     }
+
+    
 }

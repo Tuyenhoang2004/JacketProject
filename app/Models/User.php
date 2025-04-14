@@ -14,7 +14,9 @@ class User extends Authenticatable
 
     protected $table = 'users';
     protected $primaryKey = 'UserID';
+    public $incrementing = true;
     public $timestamps = false;
+
 
     protected $fillable = [
         'UserName',
@@ -63,5 +65,9 @@ class User extends Authenticatable
                 $user->UserPassword = Hash::make($user->UserPassword);
             }
         });
+    }
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class, 'UserID');
     }
 }

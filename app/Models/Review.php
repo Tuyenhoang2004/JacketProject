@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+
 
     // Các trường có thể mass assign
-    protected $fillable = ['ProductID', 'UserID', 'Content', 'Rating'];
+    protected $table = 'reviews';
+    protected $fillable = ['ProductID', 'UserID', 'Rating', 'Comment', 'ReviewDate'];
 
     // Mối quan hệ với model Product
     public function product()
@@ -21,6 +24,7 @@ class Review extends Model
     // Mối quan hệ với model User (nếu có)
     public function user()
     {
-        return $this->belongsTo(User::class, 'UserID'); // Mỗi review thuộc về một người dùng
+        return $this->belongsTo(User::class, 'UserID', 'UserID');
     }
+
 }

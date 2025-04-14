@@ -58,3 +58,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+
+Route::get('/review', [ReviewController::class, 'create'])->name('review.create');
+Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
+Route::post('/product/{id}/review', [ReviewController::class, 'store'])->name('review.store');
+

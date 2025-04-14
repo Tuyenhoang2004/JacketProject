@@ -2,12 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Product extends Model
 {
     use HasFactory;
@@ -44,5 +40,9 @@ class Product extends Model
     public function discount(): BelongsTo
     {
         return $this->belongsTo(Discount::class, 'DiscountID', 'DiscountID');
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'ProductID');
     }
 }
