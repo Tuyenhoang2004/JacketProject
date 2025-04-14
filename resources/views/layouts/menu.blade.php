@@ -34,51 +34,79 @@
         }
 
         .menu li a:hover {
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             color: black;
         }
 
         .menu li a.active {
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             color: black;
         }
 
         .user-menu {
-            position: relative;
+        position: relative;
+        display: inline-block;
         }
 
         .user-menu .dropdown-menu {
             display: none;
             position: absolute;
             top: 100%;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            right: 0;
+            background-color: white;
+            color: white;
+            min-width: 160px;
             padding: 10px 0;
-            list-style: none;
-            min-width: 150px;
-            z-index: 999;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .user-menu:hover .dropdown-menu {
             display: block;
         }
 
-        .user-menu .dropdown-menu li {
-            padding: 1px 8px;
+        .logout-btn {
+            background: none;
+            border: 3px;
+            color: red;
+            padding: 8px 15px;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
         }
 
-        .user-menu .dropdown-menu li a {
-            text-decoration: none;
+        .dropdown-menu li {
+            padding: 8px 15px;
             color: black;
-            display: block;
-            font-size: 13px;
+            font-weight: bold;
         }
 
-        .user-menu .dropdown-menu li a:hover {
-            background-color: #f0f0f0;
+        .dropdown-menu li a {
+            color: white;
+            text-decoration: none;
+            display: block;
         }
+
+        .dropdown-menu li a:hover {
+            background-color: #333;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #d9534f;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+            width: 100%;
+            padding: 0;
+        }
+
+        .logout-btn:hover {
+            color:rgb(120, 9, 5);
+        }
+
 
         .search-box {
             display: flex;
@@ -94,14 +122,15 @@
         .search-container button {
             padding: 5px 10px;
             border: none;
-            background-color: #FFBA28;
+            background-color: rgb(252, 5, 141);
             border-radius: 0 5px 5px 0;
             cursor: pointer;
         }
 
         .search-container button:hover {
-            background-color: #e0a800;
+            background-color: rgb(252, 5, 141);
         }
+        
     </style>
 
     <ul>
@@ -128,16 +157,24 @@
         </li>
 
         <li class="user-menu">
-            <a href="#" class="fa fa-user"></a>
+            <a href="#" class="fa fa-user" onclick="return false;"></a>
             <ul class="dropdown-menu">
-                @if (session('UserPhone'))
-                    <li>Xin chào {{ session('UserName') }}!</li>
-                    <li><a href="{{ route('logout') }}">Đăng xuất</a></li>
+                @if(Auth::check())
+                    <li style="padding: 8px 15px; font-weight: bold;">
+                        Hello, {{ Auth::user()->UserName }}
+                    </li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                            @csrf
+                            <button type="submit" class="logout-btn">Đăng xuất</button>
+                        </form>
+                    </li>
                 @else
-                    <li><a href="{{ route('signin') }}">Đăng nhập</a></li>
-                    <li><a href="{{ route('signup') }}">Đăng ký</a></li>
+                    <li><a href="{{ route('login') }}">Đăng nhập</a></li>
+                    <li><a href="{{ route('register') }}">Đăng ký</a></li>
                 @endif
             </ul>
+
         </li>
 
         <li>
