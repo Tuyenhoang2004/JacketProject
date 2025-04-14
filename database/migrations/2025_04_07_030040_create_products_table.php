@@ -13,28 +13,21 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-{
-    Schema::create('products', function (Blueprint $table) {
-        $table->id('ProductID');
-        $table->string('ProductName');
-        $table->text('Description')->nullable();
-        $table->decimal('Price', 10, 2);
-        $table->integer('Stock');
-        $table->unsignedBigInteger('CategoryID');
-        $table->string('ImageURL')->nullable();
-        $table->timestamps();
+        Schema::create('products', function (Blueprint $table) {
+            $table->id('ProductID');
+            $table->string('ProductName', 100);
+            $table->text('Description')->nullable();
+            $table->decimal('Price', 10, 2);
+            $table->integer('Stock');
+            $table->unsignedBigInteger('CategoryID');
+            $table->decimal('Discount', 10, 2)->nullable();
+            $table->string('ImageURL', 200)->nullable();
+            $table->timestamps();
 
-        $table->foreign('CategoryID')->references('CatalogID')->on('catalog')->onDelete('cascade');
-    });
-}
-
+            $table->foreign('CategoryID')->references('CatalogID')->on('catalog')->onDelete('cascade');
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('products');

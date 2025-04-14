@@ -19,29 +19,30 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'UserEmail' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'email' => 'required|email',
+            'password' => 'required',
         ];
-    }
+}
+
 
     public function authenticate(): void
-{
-    $this->ensureIsNotRateLimited();
+    {
+        $this->ensureIsNotRateLimited();
 
-    $user = \App\Models\User::where('UserEmail', $this->email)->first();
+        $user = \App\Models\User::where('UserEmail', $this->email)->first();
 
-    if (!$user || !\Hash::check($this->password, $user->password)) {
-        RateLimiter::hit($this->throttleKey());
+        if (!$user || !\Hash::check($this->password, $user->password)) {
+            RateLimiter::hit($this->throttleKey());
 
-        throw ValidationException::withMessages([
-            'email' => __('Thông tin đăng nhập không chính xác.'),
-        ]);
+            throw ValidationException::withMessages([
+                'email' => __('Thông tin đăng nhập không chính xác.'),
+            ]);
+        }
+
+        Auth::login($user, $this->boolean('remember'));
+
+        RateLimiter::clear($this->throttleKey());
     }
-
-    Auth::login($user, $this->boolean('remember'));
-
-    RateLimiter::clear($this->throttleKey());
-}
 
 
     public function ensureIsNotRateLimited()

@@ -16,8 +16,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="UserEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" name="UserEmail" value="{{ old('UserEmail', $user->UserEmail ?? '') }}" required>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" value="{{ old('email', $user->email ?? '') }}" required>
         </div>
 
         <div class="mb-3">

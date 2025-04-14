@@ -14,25 +14,25 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     public function show($id)
-{
-    $product = DB::table('products')
-    ->leftJoin('discount', 'products.DiscountID', '=', 'discount.DiscountID')
-    ->select('products.*', 'discount.DiscountValue', 'discount.StartDate', 'discount.EndDate')
-    ->where('products.ProductID', $id)
-    ->first();
+    {
+        $product = DB::table('products')
+        ->leftJoin('discount', 'products.DiscountID', '=', 'discount.DiscountID')
+        ->select('products.*', 'discount.DiscountValue', 'discount.StartDate', 'discount.EndDate')
+        ->where('products.ProductID', $id)
+        ->first();
 
 
-    $list_catalog = Catalog::all();
+        $list_catalog = Catalog::all();
 
-    // Lấy danh sách đánh giá của sản phẩm
-    $reviews = Review::where('ProductID', $id)->get();
+        // Lấy danh sách đánh giá của sản phẩm
+        $reviews = Review::where('ProductID', $id)->get();
 
-    return view('product.detail', [
-        'product' => $product,
-        'list_catalog' => $list_catalog,
-        'reviews' => $reviews,
-    ]);
-}
+        return view('product.detail', [
+            'product' => $product,
+            'list_catalog' => $list_catalog,
+            'reviews' => $reviews,
+        ]);
+    }
 
 
     public function index(Request $request)
