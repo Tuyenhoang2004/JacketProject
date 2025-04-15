@@ -19,17 +19,17 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email', // Sửa lại 'email' thay vì 'UserEmail'
             'password' => 'required',
         ];
-}
-
+    }
 
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        $user = \App\Models\User::where('UserEmail', $this->email)->first();
+        // Sửa 'UserEmail' thành 'email'
+        $user = \App\Models\User::where('email', $this->email)->first(); // Đổi 'UserEmail' thành 'email'
 
         if (!$user || !\Hash::check($this->password, $user->password)) {
             RateLimiter::hit($this->throttleKey());
@@ -44,7 +44,6 @@ class LoginRequest extends FormRequest
         RateLimiter::clear($this->throttleKey());
     }
 
-
     public function ensureIsNotRateLimited()
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
@@ -56,7 +55,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'UserEmail' => trans('auth.throttle', [
+            'email' => trans('auth.throttle', [ // Đổi 'UserEmail' thành 'email'
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -65,6 +64,6 @@ class LoginRequest extends FormRequest
 
     public function throttleKey()
     {
-        return Str::lower($this->input('UserEmail')) . '|' . $this->ip();
+        return Str::lower($this->input('email')) . '|' . $this->ip(); // Đổi 'UserEmail' thành 'email'
     }
 }

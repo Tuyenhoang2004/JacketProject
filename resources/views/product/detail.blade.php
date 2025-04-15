@@ -10,16 +10,15 @@
     </div>
 @endif
 
-
 <style>
     body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            max-width: 2000px;
-            margin: 0 auto;
-            padding: 10px;
-        }
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        max-width: 2000px;
+        margin: 0 auto;
+        padding: 10px;
+    }
 
     .container {
         max-width: 1500px;
@@ -192,23 +191,18 @@
             <h4>Mô tả sản phẩm</h4>
             <p>{{ $product->Description }}</p>
         </div>
-        
 
         @if(count($reviews) > 0)
             <div class="reviews-container">
                 @foreach($reviews as $review)
                     <div class="review-item">
-                        <!-- Hiển thị tên người dùng -->
-                         
                         <p><strong>{{ $review->user->UserName ?? 'Người dùng' }}</strong>
                         - {{ \Carbon\Carbon::parse($review->ReviewDate)->format('d/m/Y') }}</p>
-                        
-                        <!-- Hiển thị đánh giá sao -->
+
                         <p class="rating">
                             {!! str_repeat('★', $review->Rating) . str_repeat('☆', 5 - $review->Rating) !!}
                         </p>
-                        
-                        <!-- Hiển thị nhận xét -->
+
                         <p><strong>Nhận xét:</strong> {!! nl2br(e($review->Comment)) !!}</p>
                     </div>
                     <hr>
@@ -217,7 +211,6 @@
         @else
             <p>Chưa có đánh giá cho sản phẩm này.</p>
         @endif
-
     @endif
 </div>
 @endsection

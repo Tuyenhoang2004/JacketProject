@@ -53,13 +53,25 @@ class OrderController extends Controller
         // Trả dữ liệu về view
         return view('admin.orders.statistics', compact('totalRevenue','orderStats','topProducts','topUsers'));
     }
-    public function details()
-    {
-        $orders = Order::all();
-        $allowedStatuses = ['Chờ xử lý', 'Hoàn thành', 'Đã hủy'];
+    public function details(Request $request)
+{
+    $allowedStatuses = ['Chờ xử lý', 'Hoàn thành', 'Đã hủy'];
 
-        return view('admin.orders.details', compact('orders', 'allowedStatuses'));
+    $query = Order::query();
+
+    // Nếu có lọc ngày
+    if ($request->filled('from_date') && $request->filled('to_date')) {
+        $query->whereBetween('OrderDate', [
+            $request->from_date . ' 00:00:00',
+            $request->to_date . ' 23:59:59'
+        ]);
     }
+
+    $orders = $query->get();
+
+    return view('admin.orders.details', compact('orders', 'allowedStatuses'));
+}
+
 
     public function updateStatus($orderId, $status)
     {
@@ -85,23 +97,33 @@ class OrderController extends Controller
     return view('admin.orders.order-detail', compact('order'));
 }
 
-    public function orderstatistics()
-    {
-        $totalRevenue = DB::table('orders')
-            ->where('StatusOrders', 'Hoàn thành')
-            ->sum('TotalAmount');
+public function orderstatistics(Request $request)
+{
+    $query = DB::table('orders');
 
-        $totalOrders = DB::table('orders')->count();
-        $completedOrders = DB::table('orders')->where('StatusOrders', 'Hoàn thành')->count();
-        $cancelledOrders = DB::table('orders')->where('StatusOrders', 'Đã huỷ')->count();
-
-        return view('admin.orders.order-statistics', compact(
-            'totalRevenue',
-            'totalOrders',
-            'completedOrders',
-            'cancelledOrders'
-        ));
+    // Nếu có khoảng ngày được chọn
+    if ($request->filled('from_date') && $request->filled('to_date')) {
+        $query->whereBetween('OrderDate', [
+            $request->from_date . ' 00:00:00',
+            $request->to_date . ' 23:59:59',
+        ]);
     }
+
+    $totalOrders = $query->count();
+
+    // Clone lại query cho từng loại, tránh ảnh hưởng
+    $completedOrders = (clone $query)->where('StatusOrders', 'Hoàn thành')->count();
+    $cancelledOrders = (clone $query)->where('StatusOrders', 'Đã huỷ')->count();
+    $totalRevenue = (clone $query)->where('StatusOrders', 'Hoàn thành')->sum('TotalAmount');
+
+    return view('admin.orders.order-statistics', compact(
+        'totalRevenue',
+        'totalOrders',
+        'completedOrders',
+        'cancelledOrders'
+    ));
+}
+
     public function history()
 {
     if (!Auth::check()) {

@@ -17,18 +17,17 @@ class User extends Authenticatable
     public $incrementing = true;
     public $timestamps = false;
 
-
     protected $fillable = [
         'UserName',
         'email',
-        'password',
+        'password', // đổi từ UserPassword
         'UserPhone',
         'UserAddress',
         'role',
     ];
 
     protected $hidden = [
-        'password',
+        'password', // đổi từ UserPassword
         'remember_token',
     ];
 
@@ -38,7 +37,7 @@ class User extends Authenticatable
 
     public function getAuthPassword()
     {
-        return $this->password;
+        return $this->password; // đổi từ UserPassword
     }
 
     public function getAuthIdentifierName()
@@ -61,11 +60,12 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($user) {
-            if ($user->isDirty('UserPassword')) {
-                $user->UserPassword = Hash::make($user->UserPassword);
+            if ($user->isDirty('password')) { // đổi từ UserPassword
+                $user->password = Hash::make($user->password); // đổi từ UserPassword
             }
         });
     }
+
     public function reviews()
     {
         return $this->hasMany(\App\Models\Review::class, 'UserID');

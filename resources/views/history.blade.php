@@ -188,6 +188,56 @@
                         </td>
                     </tr>
                 @endforeach
+
+            </td>
+            <td>
+                @foreach ($order->products as $product)
+                <img src="{{ asset('image/' . $product->ImageURL) }}" width="100" alt="Hình ảnh sản phẩm">
+                @endforeach
+            </td>
+        @else
+            <td>Không có sản phẩm</td>
+            <td>Không có hình ảnh</td>
+        @endif
+
+        <td>{{ $order->OrderDate->format('d/m/Y') }}</td>
+        <td>{{ number_format($order->TotalAmount) }}đ</td>
+        <td>{{ $order->StatusOrders }}</td>
+        <td>{{ $order->user->UserAddress ?? 'Không có địa chỉ' }}</td>
+        <td>
+        @if ($order->StatusOrders == 'Đã hủy')
+            <span class="badge badge-danger">Không thể thao tác</span>
+        @elseif ($order->StatusOrders == 'Hoàn thành')
+        <span class="badge badge-danger">Vui lòng đánh giá sản phẩm</span>
+        <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => request()->fullUrl()]) }}"
+        class="btn btn-warning btn-sm">
+            Đánh giá
+        </a>
+
+        @else
+        <form action="{{ route('order.updateStatus', [$order->OrderID, 'Đã hủy']) }}" method="POST" style="display:inline-block; margin-right: 8px;">
+    @csrf
+    <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 110px;">
+        <i class="fa fa-times-circle"></i> Hủy đơn
+    </button>
+</form>
+
+<form action="{{ route('order.updateStatus', [$order->OrderID, 'Hoàn thành']) }}" method="POST" style="display:inline-block;">
+    @csrf
+    <button type="submit" class="btn btn-outline-success btn-sm" style="min-width: 130px;">
+        <i class="fa fa-check-circle"></i> Đã nhận
+    </button>
+</form>
+
+
+
+        @endif
+
+        </td>
+    </tr>
+@endforeach
+
+
             </tbody>
         </table>
     @endif

@@ -30,7 +30,6 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
 {
-    
     // Kiểm tra xem người dùng có tồn tại không
     $user = User::where('email', $request->email)->first();
 
@@ -62,9 +61,6 @@ class AuthenticatedSessionController extends Controller
 }
 
 
-
-
-
     /**
      * Destroy an authenticated session.
      *
@@ -72,14 +68,12 @@ class AuthenticatedSessionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request)
-{
-    Auth::logout();
+    {
+        Auth::logout();
 
-    // Xóa thông tin khỏi session
-    $request->session()->forget(['UserName', 'UserPhone']);
+        // Xóa thông tin khỏi session
+        $request->session()->forget(['UserName', 'UserPhone']);
 
-    return redirect('/');
-}
-
-
+        return redirect('/');
+    }
 }

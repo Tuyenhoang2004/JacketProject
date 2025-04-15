@@ -64,6 +64,7 @@ class CheckoutController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
             'note' => $request->note,
+            
         ]);
 
         // Lưu vào session order_id và shipping_info_saved

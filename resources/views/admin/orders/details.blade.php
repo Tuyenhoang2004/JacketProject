@@ -61,6 +61,19 @@
             <td colspan="6" class="text-center">Không có đơn hàng nào.</td>
         </tr>
         @endif
+        <form method="GET" class="row mb-4">
+            <div class="col-md-3">
+                <label for="from_date" class="form-label">Từ ngày:</label>
+                <input type="date" id="from_date" name="from_date" class="form-control" value="{{ request('from_date') }}">
+            </div>
+            <div class="col-md-3">
+                <label for="to_date" class="form-label">Đến ngày:</label>
+                <input type="date" id="to_date" name="to_date" class="form-control" value="{{ request('to_date') }}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-success w-100">Lọc</button>
+            </div>
+        </form>
 
     <table class="table table-striped">
         <thead class="thead-dark">

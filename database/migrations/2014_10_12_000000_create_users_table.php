@@ -16,8 +16,8 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('UserID');  // Đây là cột khóa chính của bạn
             $table->string('UserName');
-            $table->string('UserEmail')->unique();
-            $table->string('UserPassword');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->string('UserPhone')->nullable();
             $table->string('UserAddress')->nullable();
             $table->timestamps();

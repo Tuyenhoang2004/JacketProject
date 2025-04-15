@@ -43,9 +43,9 @@ class NewPasswordController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
-                // Cập nhật mật khẩu vào cột UserPassword
+                // Cập nhật mật khẩu vào cột 'password'
                 $user->forceFill([
-                    'UserPassword' => Hash::make($request->password), // Đảm bảo dùng UserPassword thay vì password
+                    'password' => Hash::make($request->password), // Dùng 'password' đúng với tên trường trong DB
                     //'remember_token' => Str::random(60),
                 ])->save();
 
