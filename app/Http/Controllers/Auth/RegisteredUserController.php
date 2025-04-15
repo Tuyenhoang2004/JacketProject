@@ -33,17 +33,18 @@ class RegisteredUserController extends Controller
 {
     $request->validate([
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], // ✅ Đã sửa từ UserEmail -> email
-        'UserPassword' => ['required', 'confirmed', Rules\Password::defaults()],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()], 
         'UserPhone' => ['nullable', 'string', 'max:15'],
         'UserAddress' => ['nullable', 'string', 'max:128'],
     ]);
+    
 
     // Tạo người dùng mới
     $user = User::create([
         'UserName' => $request->name,
         'email' => $request->email, // ✅ Cột mới trong DB là 'email'
-        'UserPassword' => Hash::make($request->password),
+        'password' => Hash::make($request->password),
         'UserPhone' => $request->UserPhone ?? null,
         'UserAddress' => $request->UserAddress ?? null,
         'role' => 'user', 

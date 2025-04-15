@@ -104,29 +104,18 @@ class OrderController extends Controller
     }
     public function history()
 {
-    $user = Auth::user();  // Lấy người dùng hiện tại
-
-    // Lấy toàn bộ đơn hàng + chi tiết + sản phẩm
-    $orders = Order::with(['orderDetails.product']) // Giả sử đã khai quan hệ orderDetails trong model Order
-                ->where('UserID', $user->UserID)
-                ->get();
-
-    // Nếu không có đơn hàng
-    if ($orders->isEmpty()) {
-        return view('history', ['message' => 'Bạn chưa có đơn hàng nào.']);
+    if (!Auth::check()) {
+        session()->put('warning', 'Vui lòng đăng nhập để xem lịch sử mua hàng');
+        return redirect()->route('login');
     }
 
-    // Convert ngày cho dễ đọc (nếu cần)
-    foreach ($orders as $order) {
-        $order->OrderDate = Carbon::parse($order->OrderDate);
-    }
+    $user = Auth::user();
+    $orders = Order::with(['orderDetails.product'])
+                   ->where('UserID', $user->UserID)
+                   ->get();
 
     return view('history', compact('orders'));
 }
-
-    
-
-
 
 
 

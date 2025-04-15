@@ -66,23 +66,27 @@ class ProductController extends Controller
             'category_id' => 'required|exists:catalog,CatalogID',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
+    
         $product = new Product();
         $product->ProductName = $request->name;
         $product->Description = $request->description;
         $product->Price = $request->price;
         $product->Stock = $request->quantity;
         $product->CategoryID = $request->category_id;
-
+    
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('', 'public');
-            $product->ImageURL = $imagePath;
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName(); // Lấy tên gốc
+            $image->storeAs('public/products', $imageName); // Lưu file vào thư mục storage (vẫn nên lưu file)
+            $product->ImageURL = $imageName; // CHỈ LƯU TÊN ẢNH
         }
-
+        
+    
         $product->save();
-
+    
         return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm thành công!');
     }
+    
 
     public function destroy($id)
     {
@@ -113,33 +117,38 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'quantity' => 'required|integer',
-            'category_id' => 'required|exists:catalog,CatalogID',
-            'image' => 'image|mimes:jpg,png,jpeg|max:2048',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price' => 'required|numeric',
+        'quantity' => 'required|integer',
+        'category_id' => 'required|exists:catalog,CatalogID',
+        'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+    ]);
 
-        $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $product->ImageURL = $imagePath;
-        }
+    $data = [
+        'ProductName' => $request->name,
+        'Description' => $request->description,
+        'Price' => $request->price,
+        'Stock' => $request->quantity,
+        'CategoryID' => $request->category_id,
+    ];
 
-        $product->update([
-            'ProductName' => $request->name,
-            'Description' => $request->description,
-            'Price' => $request->price,
-            'Stock' => $request->quantity,
-            'CategoryID' => $request->category_id,
-        ]);
-
-        return redirect()->route('products.index')->with('success', 'Bạn đã thay đổi thành công!');
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName();
+        $data['ImageURL'] = $imageName; // chỉ lưu tên gốc, không copy ảnh
     }
+
+    $product->update($data);
+
+    return redirect()->route('products.index')->with('success', 'Bạn đã thay đổi thành công!');
+}
+
+
 
     public function create()
     {

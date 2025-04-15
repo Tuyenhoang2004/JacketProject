@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
 
     if ($user) {
         // Kiểm tra xem mật khẩu có khớp không
-        if (Hash::check($request->password, $user->UserPassword)) {
+        if (Hash::check($request->password, $user->password)) {
             // Nếu mật khẩu đúng, thực hiện đăng nhập
             if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
                 $request->session()->regenerate();

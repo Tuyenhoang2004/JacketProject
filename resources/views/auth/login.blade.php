@@ -15,6 +15,11 @@
 
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
+                @if (session('warning'))
+                    <div class="mb-4 px-4 py-3 rounded bg-yellow-100 text-yellow-800 text-sm font-medium">
+                        {{ session('warning') }}
+                    </div>
+                @endif
 
                 <!-- Validation Errors -->
                 <x-auth-validation-errors class="mb-4" :errors="$errors" />
@@ -55,6 +60,14 @@
                         </x-button>
                     </div>
                 </form>
+
+                 <!-- Dòng đăng ký -->
+                 <div class="mt-4 text-center">
+                    <span class="text-sm text-gray-600">Bạn chưa có tài khoản?</span>
+                    <a href="{{ route('register') }}" class="underline text-sm text-indigo-600 hover:text-indigo-800">
+                        {{ __('Đăng ký ngay') }}
+                    </a>
+                </div>
             </x-auth-card>
         </div>
     </div>

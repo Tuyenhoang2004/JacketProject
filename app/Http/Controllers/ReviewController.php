@@ -25,11 +25,17 @@ class ReviewController extends Controller
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
         }
 
+        $reviewed = Review::where('ProductID', $productID)
+                      ->where('UserID', Auth::id())
+                      ->exists();
+
         return view('review.form', [
             'product' => $product,
-            'back_url' => $backUrl
+            'back_url' => $backUrl,
+            'reviewed' => $reviewed
         ]);
     }
+    
 
     // Lưu đánh giá từ form
    
@@ -44,6 +50,17 @@ class ReviewController extends Controller
     
         $user = Auth::user();
         $userID = $user->UserID;
+
+        $orderExists = DB::table('orders')
+        ->join('orderdetails', 'orders.OrderID', '=', 'orderdetails.OrderID')
+        ->where('orders.UserID', $userID)
+        ->where('orderdetails.ProductID', $request->product_id)
+        ->where('orders.StatusOrders', 'Hoàn thành')
+        ->exists();
+
+    if (!$orderExists) {
+        return redirect()->back()->with('error', 'Bạn chỉ có thể đánh giá sản phẩm sau khi mua và nhận hàng.');
+    }
     
         Review::create([
             'ProductID' => $request->product_id,

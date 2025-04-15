@@ -10,6 +10,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Auth\RegisteredUserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,7 +35,9 @@ Route::post('/checkout/confirm-shipping', [CheckoutController::class, 'confirmSh
 
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::get('checkout/history', [OrderController::class, 'history'])->name('checkout.history');
+Route::get('checkout/history', [OrderController::class, 'history'])
+    ->middleware('auth')
+    ->name('checkout.history');
 Route::post('/order/{orderId}/{status}', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 // Bước 3: Xử lý thanh toán (POST)
 Route::post('/checkout/process-payment', [CheckoutController::class, 'processPayment'])->name('checkout.processPayment');
@@ -94,3 +97,10 @@ Route::get('/check-pass', function () {
         return 'Mật khẩu sai';
     }
 });
+
+Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+
+// Route để xử lý form đăng ký (nếu cần)
+Route::post('register', [RegisteredUserController::class, 'store'])->name('register.store');
+
+Route::get('/review', [ReviewController::class, 'create'])->name('review.create')->middleware('auth');

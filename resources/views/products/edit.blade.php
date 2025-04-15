@@ -42,6 +42,22 @@
                 @endforeach
             </select>
         </div>
+        <!-- Ảnh hiện tại -->
+        <div class="mb-3">
+            <label class="form-label">Ảnh hiện tại</label><br>
+            @if ($product->ImageURL)
+            <img src="{{ asset('image/' . $product->ImageURL) }}" width="100" alt="Hình ảnh sản phẩm">
+            @else
+                <p>Không có ảnh</p>
+            @endif
+        </div>
+
+        <!-- Upload ảnh mới -->
+        <div class="mb-3">
+            <label for="image" class="form-label">Chọn ảnh mới (nếu muốn thay đổi)</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
 
         <!-- Nút Lưu -->
         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
