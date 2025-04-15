@@ -139,7 +139,12 @@
         @if ($order->StatusOrders == 'Đã hủy')
             <span class="badge badge-danger">Không thể thao tác</span>
         @elseif ($order->StatusOrders == 'Hoàn thành')
-            <span class="badge badge-success">Không thể thao tác</span>
+        <span class="badge badge-danger">Vui lòng đánh giá sản phẩm</span>
+        <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => request()->fullUrl()]) }}"
+        class="btn btn-warning btn-sm">
+            Đánh giá
+        </a>
+
         @else
         <form action="{{ route('order.updateStatus', [$order->OrderID, 'Đã hủy']) }}" method="POST" style="display:inline-block; margin-right: 8px;">
     @csrf

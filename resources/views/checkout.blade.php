@@ -3,176 +3,232 @@
 @section('content')
 @include('layouts.menu')
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Trang Thanh Toán</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <style>
-        /* Các kiểu CSS của bạn */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 40px auto;
-            background-color: #fff;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .checkout-button {
-            display: block;
-            width: 100%;
-            background-color: #ffc107;
-            color: #000;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .checkout-button:hover {
-            background-color: #e0a800;
-        }
-        .alert {
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>XÁC NHẬN ĐẶT HÀNG</h1>
+<style>
+    body {
+        background-color: #f4f4f4;
+    }
+    .container {
+        width: 95%;
+        margin: 40px auto;
+        background-color: #fff;
+        padding: 30px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
+    .checkout-button {
+        display: block;
+        width: 100%;
+        background-color: #ffc107;
+        color: #000;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .checkout-button:hover {
+        background-color: #e0a800;
+    }
+    .alert {
+        padding: 12px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .qr-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+}
 
-        {{-- Thông báo thành công --}}
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
+.qr-code img {
+    width: 300px; /* Tăng kích thước mã QR */
+    height: auto; /* Giữ tỷ lệ kích thước gốc */
+    margin-top: 10px; /* Khoảng cách giữa các mã QR */
+}
 
-        {{-- Thông báo lỗi --}}
-        @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
-        @endif
+#qr-code-momo, #qr-code-bank {
+    display: none; /* Mặc định ẩn mã QR */
+}
 
-        {{-- Giỏ hàng --}}
-        @if (!empty($cart))
-            <table class="table">
-                <thead>
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    background-color: #ff6699;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+
+    h3{
+        text-align: right;
+    }
+
+
+</style>
+
+<div class="container">
+    <h1>XÁC NHẬN ĐẶT HÀNG</h1>
+
+    {{-- Thông báo --}}
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    @if (!empty($cart))
+        <table>
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($cart as $item)
                     <tr>
-                        <th>Sản phẩm</th>
-                        <th>Số lượng</th>
-                        <th>Giá</th>
+                        <td>{{ $item['product_name'] }}</td>
+                        <td>{{ $item['quantity'] }}</td>
+                        <td>{{ number_format($item['price_after_discount']) }}đ</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($cart as $item)
-                        <tr>
-                            <td>{{ $item['product_name'] }}</td>
-                            <td>{{ $item['quantity'] }}</td>
-                            <td>{{ number_format($item['price_after_discount']) }}đ</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                @endforeach
+            </tbody>
+        </table>
+        <hr><br>
+        <h3><b>Tổng tiền: {{ number_format($total) }}đ</b></h3><br>
+        <hr>
 
-            {{-- Tổng tiền --}}
-            <h3>Tổng tiền: {{ number_format($total) }}đ</h3>
+        @if (!$hideForm)
             {{-- Form nhập thông tin giao hàng --}}
-@if (!$hideForm)
-    <div style="background-color: #ffe6e6; border-radius: 12px; padding: 30px; max-width: 600px; margin: 30px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        @php
-    $user = Auth::user();
-@endphp
+            <div style="background-color: #ffe6e6; border-radius: 12px; padding: 30px; max-width: 600px; margin: 30px auto;">
+                @php $user = Auth::user(); @endphp
 
-<form method="POST" action="{{ route('checkout.confirmShipping') }}">
-    @csrf
+                <form method="POST" action="{{ route('checkout.confirmShipping') }}">
+                    @csrf
+                    <h4 style="text-align: center; margin-bottom: 25px; color: #cc3366;">Thông tin giao hàng</h4>
 
-    <h4 style="text-align: center; margin-bottom: 25px; color: #cc3366;">Thông tin giao hàng</h4>
+                    <div style="margin-bottom: 15px;">
+                        <label for="customer_name"><strong>Tên người nhận</strong></label>
+                        <input type="text" name="customer_name" id="customer_name" value="{{ old('customer_name', $user->UserName) }}" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                    </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="customer_name" style="font-weight: bold;">Tên người nhận</label>
-        <input type="text" class="form-control" name="customer_name" id="customer_name"
-               value="{{ old('customer_name', $user->UserName) }}"
-               style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                    <div style="margin-bottom: 15px;">
+                        <label for="address"><strong>Địa chỉ giao hàng</strong></label>
+                        <input type="text" name="address" id="address" value="{{ old('address', $user->UserAddress) }}" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label for="phone"><strong>Số điện thoại</strong></label>
+                        <input type="text" name="phone" id="phone" value="{{ old('phone', $user->UserPhone) }}" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label for="note"><strong>Ghi chú</strong></label>
+                        <textarea name="note" id="note" rows="4" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">{{ old('note') }}</textarea>
+                    </div>
+
+                    <button type="submit" style="width: 100%; background-color: #ff6699; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold;">
+                        Lưu thông tin và tiếp tục thanh toán
+                    </button>
+                </form>
+            </div>
+        @else
+        <br>
+    <div class="form-group">
+        <label><b>Phương thức thanh toán:</b></label><br><br>
+        <label><input type="radio" name="payment_method" value="cod" required> Thanh toán khi nhận hàng (COD)</label><br>
+        <label><input type="radio" name="payment_method" value="momo"> MoMo</label><br>
+        <label><input type="radio" name="payment_method" value="bank_transfer"> Chuyển khoản ngân hàng</label>
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="address" style="font-weight: bold;">Địa chỉ giao hàng</label>
-        <input type="text" class="form-control" name="address" id="address"
-               value="{{ old('address', $user->UserAddress) }}"
-               style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+    <!-- QR Codes -->
+    <div id="qr-code-container" class="qr-container">
+        <div id="qr-code-momo" class="qr-code">
+            <img src="{{ asset('image/qrcode_momo.jpg') }}" alt="QR MoMo">
+        </div>
+
+        <div id="qr-code-bank" class="qr-code">
+            <img src="{{ asset('image/qrcode_bank.jpg') }}" alt="QR Chuyển khoản">
+        </div>
     </div>
 
-    <div style="margin-bottom: 15px;">
-        <label for="phone" style="font-weight: bold;">Số điện thoại</label>
-        <input type="text" class="form-control" name="phone" id="phone"
-               value="{{ old('phone', $user->UserPhone) }}"
-               style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const radios = document.querySelectorAll('input[name="payment_method"]');
 
-    <div style="margin-bottom: 20px;">
-        <label for="note" style="font-weight: bold;">Ghi chú</label>
-        <textarea class="form-control" name="note" id="note" placeholder="Ghi chú" rows="4"
-                  style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">{{ old('note') }}</textarea>
-    </div>
+    radios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            const momoQR = document.getElementById('qr-code-momo');
+            const bankQR = document.getElementById('qr-code-bank');
+            const qrContainer = document.getElementById('qr-code-container');
 
-    <button type="submit"
-            style="width: 100%; background-color: #ff6699; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold;">
-        Lưu thông tin và tiếp tục thanh toán
-    </button>
-</form>
+            // Ẩn tất cả mã QR trước khi thay đổi
+            momoQR.style.display = 'none';
+            bankQR.style.display = 'none';
+            qrContainer.style.display = 'none'; // Ẩn container mã QR
 
-    </div>
+            // Hiển thị mã QR tương ứng khi người dùng chọn phương thức thanh toán
+            if (this.value === 'momo') {
+                momoQR.style.display = 'block';
+                qrContainer.style.display = 'flex'; // Hiển thị container mã QR
+            } else if (this.value === 'bank_transfer') {
+                bankQR.style.display = 'block';
+                qrContainer.style.display = 'flex'; // Hiển thị container mã QR
+            }
+        });
+    });
+});
 
-            @else
+</script>
             <div style="text-align: center; color: #666; margin-bottom: 15px; font-style: italic;">
                 Khách hàng vui lòng thanh toán khi nhận hàng.
             </div>
-                {{-- Form thanh toán khi thông tin giao hàng đã được xác nhận --}}
-                <form method="POST" action="{{ route('checkout.processPayment') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-success checkout-button">Xác nhận đặt hàng</button>
-                </form>
-            @endif
-        @else
-            <div class="alert alert-danger">Giỏ hàng của bạn hiện tại trống!</div>
+            <form method="POST" action="{{ route('checkout.processPayment') }}">
+                @csrf
+                <button type="submit" class="checkout-button">Xác nhận đặt hàng</button>
+            </form>
         @endif
-    </div>
-</body>
-</html>
+    @else
+        <div class="alert alert-danger">Giỏ hàng của bạn hiện tại trống!</div>
+    @endif
+</div>
 @endsection

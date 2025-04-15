@@ -36,7 +36,7 @@ class UserController extends Controller
         $request->validate([
             'UserName' => 'required',
             'email' => 'required|email|unique:users,email',
-            'UserPassword' => 'required|min:6',
+            'password' => 'required|min:6', // Sửa lại đây để phù hợp với tên trường "password"
         ]);
 
         DB::table('users')->insert([
@@ -45,7 +45,7 @@ class UserController extends Controller
             'UserPhone' => $request->UserPhone,
             'UserAddress' => $request->UserAddress,
             'role' => $request->role ?? 'user',
-            'UserPassword' => bcrypt($request->UserPassword),
+            'password' => bcrypt($request->password), // Sửa lại tên trường mật khẩu ở đây
         ]);
 
         return redirect()->route('user.index')->with('success', 'Thêm người dùng thành công!');

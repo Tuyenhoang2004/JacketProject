@@ -29,41 +29,36 @@ class AuthenticatedSessionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(LoginRequest $request)
-{
-    
-    // Kiểm tra xem người dùng có tồn tại không
-    $user = User::where('email', $request->email)->first();
+    {
+        // Kiểm tra xem người dùng có tồn tại không
+        $user = User::where('email', $request->email)->first();
 
-    if ($user) {
-        // Kiểm tra xem mật khẩu có khớp không
-        if (Hash::check($request->password, $user->UserPassword)) {
-            // Nếu mật khẩu đúng, thực hiện đăng nhập
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-                $request->session()->regenerate();
+        if ($user) {
+            // Kiểm tra xem mật khẩu có khớp không
+            if (Hash::check($request->password, $user->password)) {
+                // Nếu mật khẩu đúng, thực hiện đăng nhập
+                if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+                    $request->session()->regenerate();
 
-                // Kiểm tra vai trò của người dùng
-                if (Auth::user()->role === 'admin') {
-                    return redirect()->route('admin.dashboard');
-                } else {
-                    return redirect('/');
+                    // Kiểm tra vai trò của người dùng
+                    if (Auth::user()->role === 'admin') {
+                        return redirect()->route('admin.dashboard');
+                    } else {
+                        return redirect('/');
+                    }
                 }
+            } else {
+                // Mật khẩu sai
+                return back()->withErrors(['password' => 'Mật khẩu không đúng.']);
             }
         } else {
-            // Mật khẩu sai
-            return back()->withErrors(['password' => 'Mật khẩu không đúng.']);
+            // Email không tồn tại trong cơ sở dữ liệu
+            return back()->withErrors(['email' => 'Email không tồn tại.']);
         }
-    } else {
-        // Email không tồn tại trong cơ sở dữ liệu
-        return back()->withErrors(['email' => 'Email không tồn tại.']);
+
+        // Nếu không thỏa mãn cả hai điều kiện trên, thông báo lỗi chung
+        return back()->withErrors(['email' => 'Thông tin đăng nhập không đúng.']);
     }
-
-    // Nếu không thỏa mãn cả hai điều kiện trên, thông báo lỗi chung
-    return back()->withErrors(['email' => 'Thông tin đăng nhập không đúng.']);
-}
-
-
-
-
 
     /**
      * Destroy an authenticated session.
@@ -72,14 +67,12 @@ class AuthenticatedSessionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request)
-{
-    Auth::logout();
+    {
+        Auth::logout();
 
-    // Xóa thông tin khỏi session
-    $request->session()->forget(['UserName', 'UserPhone']);
+        // Xóa thông tin khỏi session
+        $request->session()->forget(['UserName', 'UserPhone']);
 
-    return redirect('/');
-}
-
-
+        return redirect('/');
+    }
 }

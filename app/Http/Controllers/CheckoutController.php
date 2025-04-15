@@ -38,6 +38,7 @@ class CheckoutController extends Controller
             'customer_name' => 'required|string',
             'address' => 'required|string',
             'phone' => 'required|string',
+            'payment_method' => 'required|string',
         ]);
 
         $cart = session('cart', []);
@@ -64,6 +65,9 @@ class CheckoutController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
             'note' => $request->note,
+            'payment_method' => $request->payment_method,
+
+
         ]);
 
         // Lưu vào session order_id và shipping_info_saved

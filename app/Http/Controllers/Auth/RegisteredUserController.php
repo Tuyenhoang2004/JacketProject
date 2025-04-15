@@ -30,30 +30,28 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], // ✅ Đã sửa từ UserEmail -> email
-        'UserPassword' => ['required', 'confirmed', Rules\Password::defaults()],
-        'UserPhone' => ['nullable', 'string', 'max:15'],
-        'UserAddress' => ['nullable', 'string', 'max:128'],
-    ]);
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'UserPhone' => ['nullable', 'string', 'max:15'],
+            'UserAddress' => ['nullable', 'string', 'max:128'],
+        ]);
 
-    // Tạo người dùng mới
-    $user = User::create([
-        'UserName' => $request->name,
-        'email' => $request->email, // ✅ Cột mới trong DB là 'email'
-        'UserPassword' => Hash::make($request->password),
-        'UserPhone' => $request->UserPhone ?? null,
-        'UserAddress' => $request->UserAddress ?? null,
-        'role' => 'user', 
-    ]);
+        // Tạo người dùng mới
+        $user = User::create([
+            'UserName' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // ✅ Đổi thành 'password'
+            'UserPhone' => $request->UserPhone ?? null,
+            'UserAddress' => $request->UserAddress ?? null,
+            'role' => 'user',
+        ]);
 
-    // Đăng nhập người dùng
-    Auth::login($user);
+        // Đăng nhập người dùng
+        Auth::login($user);
 
-    return redirect()->route('home');
-}
-
-
+        return redirect()->route('home');
+    }
 }

@@ -5,6 +5,22 @@
 @section('content')
 <div class="container mt-5">
     <h2 class="mb-4 text-center fw-bold">📊 Thống kê Đơn hàng</h2>
+    <form method="GET" class="row justify-content-center mb-4">
+        <div class="col-md-3">
+            <label for="from_date" class="form-label">Từ ngày:</label>
+            <input type="date" id="from_date" name="from_date" class="form-control"
+                value="{{ request('from_date') }}">
+        </div>
+        <div class="col-md-3">
+            <label for="to_date" class="form-label">Đến ngày:</label>
+            <input type="date" id="to_date" name="to_date" class="form-control"
+                value="{{ request('to_date') }}">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Lọc</button>
+        </div>
+    </form>
+
 
     <div class="row justify-content-center">
         <div class="col-md-6 mb-4">

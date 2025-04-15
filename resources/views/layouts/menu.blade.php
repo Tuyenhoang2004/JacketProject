@@ -5,11 +5,14 @@
 <style>
         .menu {
             background-color: #000;
-            padding: 10px;
+            padding: 10px 20px;
             border-radius: 5px;
-            margin-bottom: 20px;
-            width:1150px;
+            margin-bottom: 10px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
+
 
         .menu ul {
             list-style: none;

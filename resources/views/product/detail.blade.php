@@ -193,7 +193,7 @@
             <p>{{ $product->Description }}</p>
         </div>
 
-        <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => request()->fullUrl()]) }}" class="btn-review">Đánh giá sản phẩm</a>
+        
    
         
 
