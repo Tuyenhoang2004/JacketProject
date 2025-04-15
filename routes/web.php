@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use Illuminate\Support\Facades\Hash;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,10 +19,7 @@ use App\Http\Controllers\CheckoutController;
 // --- FRONTEND ROUTES ---
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
-Route::get('/signin', function () { return view('signin'); })->name('signin');
-Route::get('/signup', function () { return view('signup'); })->name('signup');
 
-Route::get('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -31,17 +29,13 @@ Route::get('/clear-cart', function () {
     return 'Đã xóa giỏ hàng khỏi session!';
 });
 
-
-Route::get('/review', [ReviewController::class, 'create'])->name('review.create');
-Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
-
 // Bước 2: Xác nhận thông tin vận chuyển (POST)
 Route::post('/checkout/confirm-shipping', [CheckoutController::class, 'confirmShipping'])->name('checkout.confirmShipping');
 
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-
+Route::get('checkout/history', [OrderController::class, 'history'])->name('checkout.history');
+Route::post('/order/{orderId}/{status}', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 // Bước 3: Xử lý thanh toán (POST)
 Route::post('/checkout/process-payment', [CheckoutController::class, 'processPayment'])->name('checkout.processPayment');
 
@@ -89,3 +83,14 @@ Route::get('/review', [ReviewController::class, 'create'])->name('review.create'
 Route::post('/review', [ReviewController::class, 'store'])->name('review.store');
 Route::post('/product/{id}/review', [ReviewController::class, 'store'])->name('review.store');
 
+
+Route::get('/check-pass', function () {
+    $plain = 'kkkkkkkk';
+    $hash = \App\Models\User::where('email', 'balenguyenthi@gmail.com')->first()->UserPassword;
+    
+    if (\Illuminate\Support\Facades\Hash::check($plain, $hash)) {
+        return 'Mật khẩu đúng';
+    } else {
+        return 'Mật khẩu sai';
+    }
+});

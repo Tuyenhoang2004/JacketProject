@@ -2,7 +2,16 @@
 
 @section('content')
 @include('layouts.menu')
+
 <style>
+    body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 10px;
+        }
     table {
         border-collapse: collapse;
         width: 100%;
@@ -85,7 +94,7 @@
             </tbody>
         </table>
         <div style="text-align: right; margin-top: 20px;">
-            <a href="{{ route('checkout') }}" class="btn-thanh-toan">Thanh toán</a>
+            <a href="{{ route('checkout') }}" class="btn-thanh-toan">Đặt hàng</a>
         </div>
 
     @else

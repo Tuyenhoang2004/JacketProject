@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <meta charset="UTF-8">
     <title>Jacket Shop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
         /* Giữ nguyên style trong thẻ <style> nếu bạn từng dùng trực tiếp trong HTML cũ */
@@ -20,7 +22,7 @@
         }
 
         .container {
-            width: 90%;
+            width: 95%;
             margin: 0 auto;
         }
 
@@ -36,16 +38,16 @@
         }
 
         footer {
-    background-color: #222;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    margin-top: 40px;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-}
+            background-color: #222;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
 
 
         .search-bar {

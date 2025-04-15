@@ -2,14 +2,13 @@
 @php
     $catalogID = $catalogID ?? null;
 @endphp
-
-<div class="menu">
-    <style>
+<style>
         .menu {
             background-color: #000;
             padding: 10px;
             border-radius: 5px;
             margin-bottom: 20px;
+            width:1150px;
         }
 
         .menu ul {
@@ -133,8 +132,58 @@
         .search-container button:hover {
             background-color: rgb(252, 5, 141);
         }
+        .cart-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .cart-menu .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            color: white;
+            min-width: 160px;
+            padding: 10px 0;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .cart-menu:hover .dropdown-menu {
+            display: block;
+        }
+
+        .cart-menu .dropdown-menu li {
+            padding: 8px 15px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .cart-menu .dropdown-menu li a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            font-weight: normal;
+        }
+
+        .cart-menu .dropdown-menu li a:hover {
+            background-color: #f8f8f8;
+            color: rgb(252, 5, 141);;
+        }
+        .custom-btn {
+            background-color: white; /* Màu nền trắng */
+            color: black; 
+        }
+
+        .custom-btn:hover {
+            background-color: #f0f0f0; /* Màu nền khi hover */
+            color: #333; /* Màu chữ khi hover */
+        }
         
     </style>
+<div class="menu">
 
     <ul>
         <li>
@@ -180,8 +229,17 @@
 
         </li>
 
-        <li>
-            <a href="{{ route('cart') }}" class="fa fa-shopping-bag"></a>
+        <li class="cart-menu">
+            <a href="#" class="fa fa-shopping-bag" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{{ route('cart') }}">Giỏ hàng</a>
+                </li>
+                <li>
+                  <a href="{{ route('checkout.history') }}" class="custom-btn" style="margin-top: 20px;">Lịch sử mua hàng</a>
+                </li>
+            </ul>
         </li>
+
     </ul>
 </div>

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderDetail;
+use Illuminate\Support\Facades\DB;
+use App\Models\OrderDetails;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
@@ -21,6 +23,7 @@ class CheckoutController extends Controller
             return $item['quantity'] * $item['price_after_discount'];
         });
 
+        // Kiểm tra thông tin giao hàng đã được lưu chưa
         $hideForm = session('shipping_info_saved', false);
 
         return view('checkout', compact('cart', 'total', 'hideForm'));
@@ -28,6 +31,9 @@ class CheckoutController extends Controller
 
     public function confirmShipping(Request $request)
     {
+        $user = Auth::user(); // Lấy thông tin người dùng hiện tại
+
+        // Validate thông tin người dùng nhập vào
         $request->validate([
             'customer_name' => 'required|string',
             'address' => 'required|string',
@@ -39,6 +45,7 @@ class CheckoutController extends Controller
             return redirect()->back()->with('error', 'Giỏ hàng trống!');
         }
 
+        // Kiểm tra xem đã có order hay chưa
         if (session()->has('order_id')) {
             return redirect()->back()->with('error', 'Thông tin đã được lưu trước đó.');
         }
@@ -47,8 +54,9 @@ class CheckoutController extends Controller
             return $item['price_after_discount'] * $item['quantity'];
         });
 
+        // Tạo order mới
         $order = Order::create([
-            'UserID' => auth()->id(),
+            'UserID' => auth()->user()->UserID,
             'OrderDate' => now(),
             'TotalAmount' => $totalAmount,
             'StatusOrders' => 'Chờ thanh toán',
@@ -58,37 +66,56 @@ class CheckoutController extends Controller
             'note' => $request->note,
         ]);
 
+        // Lưu vào session order_id và shipping_info_saved
         session([
             'order_id' => $order->OrderID,
             'shipping_info_saved' => true,
         ]);
 
-        return redirect()->route('checkout.index')->with('success', 'Thông tin giao hàng đã được xác nhận.');
+        // Quay lại trang checkout với thông báo thành công
+        return redirect()->route('checkout')->with('success', 'Thông tin giao hàng đã được xác nhận.');
     }
 
-    public function processPayment()
-    {
-        $orderID = session('order_id');
-        $cart = session('cart');
+    public function processPayment(Request $request)
+{
+    $cart = session('cart', []);
+    $orderId = session('order_id');
 
-        if (!$orderID || !$cart) {
-            return redirect()->route('checkout.index')->with('error', 'Không tìm thấy đơn hàng.');
-        }
+    if (empty($cart) || !$orderId) {
+        return redirect()->route('cart')->with('error', 'Không thể thanh toán vì thiếu thông tin đơn hàng.');
+    }
 
-        foreach ($cart as $item) {
-            OrderDetail::create([
-                'OrderID' => $orderID,
-                'ProductID' => $item['product_id'],
-                'Quantity' => $item['quantity'],
-                'UnitPrice' => $item['price_after_discount'],
+    try {
+        DB::transaction(function () use ($cart, $orderId) {
+            $order = Order::find($orderId);
+
+            if (!$order) {
+                throw new \Exception('Không tìm thấy đơn hàng.');
+            }
+
+            // Cập nhật trạng thái đơn hàng thành "Đã thanh toán"
+            $order->update([
+                'StatusOrders' => 'Chờ xử lý',
             ]);
-        }
 
-        Order::where('OrderID', $orderID)->update(['StatusOrders' => 'Đã thanh toán']);
+            foreach ($cart as $item) {
+                OrderDetails::create([
+                    'OrderID' => $order->OrderID,
+                    'ProductID' => $item['product_id'],
+                    'Quantity' => $item['quantity'],
+                    'UnitPrice' => $item['price_after_discount'],
+                ]);                              
+            }
 
-        // Sau khi thanh toán thành công, xoá hết session liên quan
-        session()->forget(['cart', 'order_id', 'shipping_info_saved']);
+            // Xoá session
+            session()->forget(['cart', 'order_id', 'shipping_info_saved']);
+        });
 
-        return redirect()->route('home')->with('success', 'Đặt hàng và thanh toán thành công!');
+        return redirect()->route('cart')->with('success', 'Đặt hàng thành công!');
+    } catch (\Exception $e) {
+        return redirect()->route('cart')->with('error', 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại. Lỗi: ' . $e->getMessage());
     }
+}
+
+
 }

@@ -11,15 +11,22 @@ class OrderDetails extends Model
     protected $table = 'orderdetails';
     protected $primaryKey = 'OrderDetailID';
     public $timestamps = false;
+    protected $fillable = [
+        'OrderID',
+        'ProductID',
+        'Quantity',
+        'UnitPrice',
+    ];
     public function product()
 {
     return $this->belongsTo(Product::class, 'ProductID', 'ProductID');
 }
 
-    public function Order()
+    public function order() 
     {
-        return $this->hasMany(Order::class, 'OrderID');
+        return $this->belongsTo(Order::class, 'OrderID');
     }
+
 
 
 

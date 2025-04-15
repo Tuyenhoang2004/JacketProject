@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\OrderDetail;
+use App\Models\OrderDetails;
+use Illuminate\Support\Facades\Auth;
 
 
 class OrderController extends Controller
@@ -59,23 +61,17 @@ class OrderController extends Controller
         return view('admin.orders.details', compact('orders', 'allowedStatuses'));
     }
 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus($orderId, $status)
     {
-        try {
-            $order = Order::findOrFail($id); // Tìm đơn hàng theo ID
-    
-            $order->StatusOrders = $request->input('StatusOrders'); // Gán trạng thái mới
-            $order->save(); // Lưu lại
-    
-            return response()->json([
-                'message' => 'Cập nhật trạng thái thành công!',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Có lỗi xảy ra khi cập nhật!',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        // Tìm đơn hàng cần cập nhật
+        $order = Order::findOrFail($orderId);
+
+        // Cập nhật trạng thái đơn hàng
+        $order->StatusOrders = $status;
+        $order->save();
+
+        // Trở lại trang lịch sử mua hàng với thông báo thành công
+        return redirect()->route('checkout.history')->with('success', 'Trạng thái đơn hàng đã được cập nhật');
     }
 
     public function show($id)
@@ -106,6 +102,30 @@ class OrderController extends Controller
             'cancelledOrders'
         ));
     }
+    public function history()
+{
+    $user = Auth::user();  // Lấy người dùng hiện tại
+
+    // Lấy toàn bộ đơn hàng + chi tiết + sản phẩm
+    $orders = Order::with(['orderDetails.product']) // Giả sử đã khai quan hệ orderDetails trong model Order
+                ->where('UserID', $user->UserID)
+                ->get();
+
+    // Nếu không có đơn hàng
+    if ($orders->isEmpty()) {
+        return view('history', ['message' => 'Bạn chưa có đơn hàng nào.']);
+    }
+
+    // Convert ngày cho dễ đọc (nếu cần)
+    foreach ($orders as $order) {
+        $order->OrderDate = Carbon::parse($order->OrderDate);
+    }
+
+    return view('history', compact('orders'));
+}
+
+    
+
 
 
 

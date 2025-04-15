@@ -43,7 +43,7 @@ class User extends Authenticatable
 
     public function getAuthIdentifierName()
     {
-        return 'email';
+        return 'UserID';
     }
 
     public function getEmailForPasswordReset()

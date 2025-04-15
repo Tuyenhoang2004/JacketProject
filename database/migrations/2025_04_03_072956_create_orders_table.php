@@ -15,13 +15,17 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id('OrderID');
-            $table->unsignedBigInteger('UserID');
-            $table->date('OrderDate');
+            $table->foreignId('UserID')->constrained('users');  // Liên kết với bảng users
             $table->decimal('TotalAmount', 10, 2);
-            $table->string('StatusOrders', 20)->nullable();
+            $table->string('PaymentMethod');
+            $table->string('Status');
+            $table->string('ShippingAddress');
+            $table->timestamp('OrderDate')->useCurrent();
             $table->timestamps();
         });
     }
+
+
 
     /**
      * Reverse the migrations.

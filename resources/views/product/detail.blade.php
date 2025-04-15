@@ -13,15 +13,18 @@
 
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        color: #333;
-    }
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            max-width: 2000px;
+            margin: 0 auto;
+            padding: 10px;
+        }
 
     .container {
-        max-width: 1200px;
+        max-width: 1500px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 10px;
     }
 
     .product-detail-container {

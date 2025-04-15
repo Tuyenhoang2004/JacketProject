@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,23 +29,40 @@ class AuthenticatedSessionController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(LoginRequest $request)
-    {
-        
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-            $request->session()->regenerate();
+{
+    
+    // Kiểm tra xem người dùng có tồn tại không
+    $user = User::where('email', $request->email)->first();
 
-            $user = Auth::user();
-            
+    if ($user) {
+        // Kiểm tra xem mật khẩu có khớp không
+        if (Hash::check($request->password, $user->UserPassword)) {
+            // Nếu mật khẩu đúng, thực hiện đăng nhập
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+                $request->session()->regenerate();
 
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } else {
-                return redirect('/');
+                // Kiểm tra vai trò của người dùng
+                if (Auth::user()->role === 'admin') {
+                    return redirect()->route('admin.dashboard');
+                } else {
+                    return redirect('/');
+                }
             }
+        } else {
+            // Mật khẩu sai
+            return back()->withErrors(['password' => 'Mật khẩu không đúng.']);
         }
-
-        return back()->withErrors(['email' => 'Thông tin đăng nhập không đúng.']);
+    } else {
+        // Email không tồn tại trong cơ sở dữ liệu
+        return back()->withErrors(['email' => 'Email không tồn tại.']);
     }
+
+    // Nếu không thỏa mãn cả hai điều kiện trên, thông báo lỗi chung
+    return back()->withErrors(['email' => 'Thông tin đăng nhập không đúng.']);
+}
+
+
+
 
 
     /**

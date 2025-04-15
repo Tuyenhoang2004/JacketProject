@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+
 class Product extends Model
 {
     use HasFactory;
@@ -32,10 +36,11 @@ class Product extends Model
         return $this->belongsToMany(Order::class, 'orderdetails', 'ProductID', 'OrderID');
     }
 
-    public function orderDetails(): HasMany
+    public function orderDetails()
     {
         return $this->hasMany(OrderDetails::class, 'ProductID', 'ProductID');
     }
+    
 
     public function discount(): BelongsTo
     {

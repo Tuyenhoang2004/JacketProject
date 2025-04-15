@@ -1,6 +1,5 @@
 <x-guest-layout>
-<div class="min-h-screen relative flex items-center justify-center bg-cover bg-center"
-     style="background: url({{ asset('image/BG.jpg') }}) no-repeat center center / cover;">
+<div class="min-h-screen relative flex items-center justify-center bg-cover bg-center">
 
 
         

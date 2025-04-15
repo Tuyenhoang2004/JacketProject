@@ -34,7 +34,7 @@ class RegisteredUserController extends Controller
     $request->validate([
         'name' => ['required', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'], // ✅ Đã sửa từ UserEmail -> email
-        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        'UserPassword' => ['required', 'confirmed', Rules\Password::defaults()],
         'UserPhone' => ['nullable', 'string', 'max:15'],
         'UserAddress' => ['nullable', 'string', 'max:128'],
     ]);
@@ -46,6 +46,7 @@ class RegisteredUserController extends Controller
         'UserPassword' => Hash::make($request->password),
         'UserPhone' => $request->UserPhone ?? null,
         'UserAddress' => $request->UserAddress ?? null,
+        'role' => 'user', 
     ]);
 
     // Đăng nhập người dùng
@@ -53,5 +54,6 @@ class RegisteredUserController extends Controller
 
     return redirect()->route('home');
 }
+
 
 }

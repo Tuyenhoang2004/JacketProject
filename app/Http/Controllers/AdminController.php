@@ -57,6 +57,7 @@ class AdminController extends Controller
                     'sold_quantity' => $product->order_details_count,
                 ];
             });
+
     
         // Top 5 người dùng mua hàng nhiều nhất
         $topUsers = DB::table('orders')

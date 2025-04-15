@@ -77,7 +77,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>THANH TOÁN</h1>
+        <h1>XÁC NHẬN ĐẶT HÀNG</h1>
 
         {{-- Thông báo thành công --}}
         @if (session('success'))
@@ -115,51 +115,58 @@
             {{-- Form nhập thông tin giao hàng --}}
 @if (!$hideForm)
     <div style="background-color: #ffe6e6; border-radius: 12px; padding: 30px; max-width: 600px; margin: 30px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        <form method="POST" action="{{ route('checkout.confirmShipping') }}">
-            @csrf
+        @php
+    $user = Auth::user();
+@endphp
 
-            <h4 style="text-align: center; margin-bottom: 25px; color: #cc3366;">Thông tin giao hàng</h4>
+<form method="POST" action="{{ route('checkout.confirmShipping') }}">
+    @csrf
 
-            <div style="margin-bottom: 15px;">
-                <label for="customer_name" style="font-weight: bold;">Tên người nhận</label>
-                <input type="text" class="form-control" name="customer_name" id="customer_name" 
-                       placeholder="Tên người nhận" required 
-                       style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-            </div>
+    <h4 style="text-align: center; margin-bottom: 25px; color: #cc3366;">Thông tin giao hàng</h4>
 
-            <div style="margin-bottom: 15px;">
-                <label for="address" style="font-weight: bold;">Địa chỉ giao hàng</label>
-                <input type="text" class="form-control" name="address" id="address" 
-                       placeholder="Địa chỉ giao hàng" required 
-                       style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-            </div>
-
-            <div style="margin-bottom: 15px;">
-                <label for="phone" style="font-weight: bold;">Số điện thoại</label>
-                <input type="text" class="form-control" name="phone" id="phone" 
-                       placeholder="Số điện thoại" required 
-                       style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <label for="note" style="font-weight: bold;">Ghi chú</label>
-                <textarea class="form-control" name="note" id="note" placeholder="Ghi chú" rows="4"
-                          style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
-            </div>
-
-            <button type="submit" style="width: 100%; background-color: #ff6699; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold;">
-                Lưu thông tin và tiếp tục thanh toán
-            </button>
-        </form>
+    <div style="margin-bottom: 15px;">
+        <label for="customer_name" style="font-weight: bold;">Tên người nhận</label>
+        <input type="text" class="form-control" name="customer_name" id="customer_name"
+               value="{{ old('customer_name', $user->UserName) }}"
+               style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
     </div>
 
+    <div style="margin-bottom: 15px;">
+        <label for="address" style="font-weight: bold;">Địa chỉ giao hàng</label>
+        <input type="text" class="form-control" name="address" id="address"
+               value="{{ old('address', $user->UserAddress) }}"
+               style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+    </div>
 
+    <div style="margin-bottom: 15px;">
+        <label for="phone" style="font-weight: bold;">Số điện thoại</label>
+        <input type="text" class="form-control" name="phone" id="phone"
+               value="{{ old('phone', $user->UserPhone) }}"
+               style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="note" style="font-weight: bold;">Ghi chú</label>
+        <textarea class="form-control" name="note" id="note" placeholder="Ghi chú" rows="4"
+                  style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">{{ old('note') }}</textarea>
+    </div>
+
+    <button type="submit"
+            style="width: 100%; background-color: #ff6699; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold;">
+        Lưu thông tin và tiếp tục thanh toán
+    </button>
+</form>
+
+    </div>
 
             @else
+            <div style="text-align: center; color: #666; margin-bottom: 15px; font-style: italic;">
+                Khách hàng vui lòng thanh toán khi nhận hàng.
+            </div>
                 {{-- Form thanh toán khi thông tin giao hàng đã được xác nhận --}}
                 <form method="POST" action="{{ route('checkout.processPayment') }}">
                     @csrf
-                    <button type="submit" class="btn btn-success checkout-button">Thanh toán</button>
+                    <button type="submit" class="btn btn-success checkout-button">Xác nhận đặt hàng</button>
                 </form>
             @endif
         @else

@@ -13,7 +13,15 @@ class Order extends Model
     protected $primaryKey = 'OrderID';
     public $timestamps = false;
 
-    protected $fillable = ['UserID', 'OrderDate', 'TotalAmount', 'StatusOrders'];
+    protected $fillable = [
+        'UserID', 
+        'OrderDate', 
+        'TotalAmount', 
+        'StatusOrders', 
+        'ShippingAddress',  // Thêm địa chỉ giao hàng
+        'PaymentMethod',    // Thêm phương thức thanh toán
+        'PaymentStatus'     // Thêm trạng thái thanh toán
+    ];
     
     public function products()
     {
@@ -26,9 +34,10 @@ class Order extends Model
     }
 
     public function orderDetails()
-        {
-            return $this->hasMany(OrderDetails::class, 'OrderDetailID');
-        }
+{
+    return $this->hasMany(OrderDetails::class, 'OrderID', 'OrderID');
+}
+
 
 
 
