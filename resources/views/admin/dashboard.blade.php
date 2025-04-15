@@ -281,8 +281,8 @@
     </select>
 </form>
 
-<h4 class="text-center mb-4">Biểu đồ doanh thu theo tháng</h4>
-<hr style="border: none; height: 4px; background: linear-gradient(to right, #4e54c8, #8f94fb); border-radius: 4px; margin: 30px 0;">
+<h4 class="text-center mb-4"><b>Biểu đồ doanh thu theo tháng</b></h4>
+<hr style="border: none; height: 4px; background: linear-gradient(to right,rgb(1, 2, 18),rgb(1, 2, 16)); border-radius: 4px; margin: 30px 0;">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('revenueChart').getContext('2d');
