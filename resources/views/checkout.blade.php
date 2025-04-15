@@ -68,33 +68,21 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 100%;
-    margin-top: 20px;
-}
+    height: 100vh; 
+    text-align: center;
+    }
 
-.qr-code img {
-    width: 300px; /* Tăng kích thước mã QR */
-    height: auto; /* Giữ tỷ lệ kích thước gốc */
-    margin-top: 10px; /* Khoảng cách giữa các mã QR */
-}
+    .qr-code img {
+        max-width: 70%; 
+        height: auto; 
+        display: block;
+        margin-top: 20px;
+        text-align: center;
+    }
 
-#qr-code-momo, #qr-code-bank {
-    display: none; /* Mặc định ẩn mã QR */
-}
-
-button[type="submit"] {
-    display: block;
-    width: 100%;
-    background-color: #ff6699;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    margin-top: 20px;
-}
-
-
+    #qr-code-momo, #qr-code-bank {
+        display: none; 
+    }
     h3{
         text-align: right;
     }
@@ -103,7 +91,7 @@ button[type="submit"] {
 </style>
 
 <div class="container">
-    <h1>XÁC NHẬN ĐẶT HÀNG</h1>
+    <h1><b>XÁC NHẬN ĐẶT HÀNG</b></h1>
 
     {{-- Thông báo --}}
     @if (session('success'))
@@ -133,14 +121,19 @@ button[type="submit"] {
                 @endforeach
             </tbody>
         </table>
-        <hr><br>
-        <h3><b>Tổng tiền: {{ number_format($total) }}đ</b></h3><br>
-        <hr>
+
+        <h3><b>Tổng tiền: {{ number_format($total) }}đ</b></h3>
 
         @if (!$hideForm)
             {{-- Form nhập thông tin giao hàng --}}
             <div style="background-color: #ffe6e6; border-radius: 12px; padding: 30px; max-width: 600px; margin: 30px auto;">
-                @php $user = Auth::user(); @endphp
+            @php
+                $user = Auth::user();
+                $userName = $user->UserName ?? '';
+                $userAddress = $user->UserAddress ?? '';
+                $userPhone = $user->UserPhone ?? '';
+            @endphp
+
 
                 <form method="POST" action="{{ route('checkout.confirmShipping') }}">
                     @csrf
@@ -165,67 +158,55 @@ button[type="submit"] {
                         <label for="note"><strong>Ghi chú</strong></label>
                         <textarea name="note" id="note" rows="4" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">{{ old('note') }}</textarea>
                     </div>
-
                     <button type="submit" style="width: 100%; background-color: #ff6699; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold;">
                         Lưu thông tin và tiếp tục thanh toán
                     </button>
                 </form>
             </div>
         @else
-        <br>
+        <form method="POST" action="{{ route('checkout.processPayment') }}">
+            @csrf
     <div class="form-group">
-        <label><b>Phương thức thanh toán:</b></label><br><br>
+        <label>Phương thức thanh toán:</label><br>
         <label><input type="radio" name="payment_method" value="cod" required> Thanh toán khi nhận hàng (COD)</label><br>
         <label><input type="radio" name="payment_method" value="momo"> MoMo</label><br>
         <label><input type="radio" name="payment_method" value="bank_transfer"> Chuyển khoản ngân hàng</label>
     </div>
 
     <!-- QR Codes -->
-    <div id="qr-code-container" class="qr-container">
-        <div id="qr-code-momo" class="qr-code">
-            <img src="{{ asset('image/qrcode_momo.jpg') }}" alt="QR MoMo">
-        </div>
-
-        <div id="qr-code-bank" class="qr-code">
-            <img src="{{ asset('image/qrcode_bank.jpg') }}" alt="QR Chuyển khoản">
-        </div>
+    <div id="qr-code-momo" style="display: none; margin-top: 10px;">
+        <img src="{{ asset('image/qrcode_momo.jpg') }}" alt="QR MoMo">
     </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const radios = document.querySelectorAll('input[name="payment_method"]');
+    <div id="qr-code-bank" style="display: none; margin-top: 10px;">
+        <img src="{{ asset('image/qrcode_bank.jpg') }}" alt="QR Chuyển khoản">
+    </div>
 
-    radios.forEach(function (radio) {
-        radio.addEventListener('change', function () {
-            const momoQR = document.getElementById('qr-code-momo');
-            const bankQR = document.getElementById('qr-code-bank');
-            const qrContainer = document.getElementById('qr-code-container');
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const radios = document.querySelectorAll('input[name="payment_method"]');
 
-            // Ẩn tất cả mã QR trước khi thay đổi
-            momoQR.style.display = 'none';
-            bankQR.style.display = 'none';
-            qrContainer.style.display = 'none'; // Ẩn container mã QR
+                radios.forEach(function (radio) {
+                    radio.addEventListener('change', function () {
+                        const momoQR = document.getElementById('qr-code-momo');
+                        const bankQR = document.getElementById('qr-code-bank');
 
-            // Hiển thị mã QR tương ứng khi người dùng chọn phương thức thanh toán
-            if (this.value === 'momo') {
-                momoQR.style.display = 'block';
-                qrContainer.style.display = 'flex'; // Hiển thị container mã QR
-            } else if (this.value === 'bank_transfer') {
-                bankQR.style.display = 'block';
-                qrContainer.style.display = 'flex'; // Hiển thị container mã QR
-            }
-        });
-    });
-});
+                        momoQR.style.display = 'none';
+                        bankQR.style.display = 'none';
 
-</script>
-            <div style="text-align: center; color: #666; margin-bottom: 15px; font-style: italic;">
-                Khách hàng vui lòng thanh toán khi nhận hàng.
-            </div>
-            <form method="POST" action="{{ route('checkout.processPayment') }}">
-                @csrf
-                <button type="submit" class="checkout-button">Xác nhận đặt hàng</button>
-            </form>
+                        if (this.value === 'momo') {
+                            momoQR.style.display = 'block';
+                        } else if (this.value === 'bank_transfer') {
+                            bankQR.style.display = 'block';
+                        }
+                    });
+                });
+            });
+        </script>
+
+            <br>
+            <button type="submit" class="checkout-button">Xác nhận đặt hàng</button>
+        </form>
         @endif
     @else
         <div class="alert alert-danger">Giỏ hàng của bạn hiện tại trống!</div>
