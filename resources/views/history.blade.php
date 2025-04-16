@@ -103,10 +103,10 @@
 </style>
 
 <div class="container">
-    <h1>Lịch Sử Mua Hàng</h1>
+    <h1><b>Lịch Sử Mua Hàng</b></h1>
 
     @if ($orders->isEmpty())
-        <div class="alert alert-warning">Bạn chưa có đơn hàng nào.</div>
+        <div class="alert alert-warning">🛒 Bạn chưa có đơn hàng nào. Hãy bắt đầu mua sắm thôi!</div>
     @else
         <table class="table table-bordered table-striped table-history">
             <thead>
@@ -121,124 +121,68 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($orders as $order)
-                    <tr>
-                        {{-- Sản phẩm --}}
-                        @if ($order->products->isNotEmpty())
-                            <td>
-                                @foreach ($order->products as $product)
-                                    <div>{{ $product->ProductName ?? 'Sản phẩm đã bị xóa' }}</div>
-                                @endforeach
-                            </td>
-                            <td>
-                                @foreach ($order->products as $product)
-                                    <img src="{{ asset('image/' . $product->ImageURL) }}" width="100" alt="Hình ảnh sản phẩm">
-                                    <div>{{ $product->ProductName ?? 'Sản phẩm đã bị xóa' }}</div>
-                                @endforeach
-                            </td>
-                        @else
-                            <td>Không có sản phẩm</td>
-                            <td>Không có hình ảnh</td>
-                        @endif
-
-                        {{-- Ngày đặt --}}
-                        <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
-
-                        {{-- Tổng tiền --}}
-                        <td>{{ number_format($order->TotalAmount) }}đ</td>
-
-                        {{-- Trạng thái --}}
-                        <td>{{ $order->StatusOrders }}</td>
-
-                        {{-- Địa chỉ --}}
-                        <td>{{ $order->user->UserAddress ?? 'Không có địa chỉ' }}</td>
-
-                        {{-- Thao tác --}}
-                        <td>
-                            @if ($order->StatusOrders == 'Đã hủy')
-                                <span class="badge badge-danger">Không thể thao tác</span>
-                            @elseif ($order->StatusOrders == 'Hoàn thành')
-                                @foreach ($order->products as $product)
-                                    {{-- Kiểm tra xem đã có đánh giá cho sản phẩm này chưa --}}
-                                    @if($product->reviews->isNotEmpty())
-                                        <span class="badge badge-secondary">Đã đánh giá</span>
-                                    @else
-                                        <div class="mb-1">Vui lòng đánh giá sản phẩm</div>
-                                        <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => url()->current()]) }}"
-                                           class="btn btn-warning btn-sm mb-2">
-                                            Đánh giá
-                                        </a>
-                                    @endif
-                                @endforeach
-                            @else
-                                <form action="{{ route('order.updateStatus', [$order->OrderID, 'Đã hủy']) }}" method="POST" style="display:inline-block; margin-bottom: 6px;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 110px;">
-                                        <i class="fa fa-times-circle"></i> Hủy đơn
-                                    </button>
-                                </form>
-
-                                <form action="{{ route('order.updateStatus', [$order->OrderID, 'Hoàn thành']) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-success btn-sm" style="min-width: 130px;">
-                                        <i class="fa fa-check-circle"></i> Đã nhận
-                                    </button>
-                                </form>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-
-            </td>
-            <td>
-                @foreach ($order->products as $product)
-                <img src="{{ asset('image/' . $product->ImageURL) }}" width="100" alt="Hình ảnh sản phẩm">
-                @endforeach
-            </td>
-        @else
-            <td>Không có sản phẩm</td>
-            <td>Không có hình ảnh</td>
-        @endif
-
-        <td>{{ $order->OrderDate->format('d/m/Y') }}</td>
-        <td>{{ number_format($order->TotalAmount) }}đ</td>
-        <td>{{ $order->StatusOrders }}</td>
-        <td>{{ $order->user->UserAddress ?? 'Không có địa chỉ' }}</td>
+@foreach ($orders as $order)
+    <tr>
+        {{-- Tên sản phẩm --}}
         <td>
-        @if ($order->StatusOrders == 'Đã hủy')
-            <span class="badge badge-danger">Không thể thao tác</span>
-        @elseif ($order->StatusOrders == 'Hoàn thành')
-        <span class="badge badge-danger">Vui lòng đánh giá sản phẩm</span>
-        <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => request()->fullUrl()]) }}"
-        class="btn btn-warning btn-sm">
-            Đánh giá
-        </a>
+            @forelse ($order->products as $product)
+                <div>{{ $product->ProductName ?? 'Sản phẩm đã bị xóa' }}</div>
+            @empty
+                Không có sản phẩm
+            @endforelse
+        </td>
 
-        @else
-        <form action="{{ route('order.updateStatus', [$order->OrderID, 'Đã hủy']) }}" method="POST" style="display:inline-block; margin-right: 8px;">
-    @csrf
-    <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 110px;">
-        <i class="fa fa-times-circle"></i> Hủy đơn
-    </button>
-</form>
+        {{-- Hình ảnh --}}
+        <td>
+            @forelse ($order->products as $product)
+                <img src="{{ asset('image/' . $product->ImageURL) }}" width="100" alt="Hình ảnh sản phẩm">
+            @empty
+                Không có hình ảnh
+            @endforelse
+        </td>
 
-<form action="{{ route('order.updateStatus', [$order->OrderID, 'Hoàn thành']) }}" method="POST" style="display:inline-block;">
-    @csrf
-    <button type="submit" class="btn btn-outline-success btn-sm" style="min-width: 130px;">
-        <i class="fa fa-check-circle"></i> Đã nhận
-    </button>
-</form>
+        {{-- Ngày đặt --}}
+        <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</td>
 
+        {{-- Tổng tiền --}}
+        <td>{{ number_format($order->TotalAmount) }}đ</td>
 
+        {{-- Trạng thái --}}
+        <td>{{ $order->StatusOrders }}</td>
 
-        @endif
+        {{-- Địa chỉ --}}
+        <td>{{ $order->user->UserAddress ?? 'Không có địa chỉ' }}</td>
 
+        {{-- Thao tác --}}
+        <td>
+            @if ($order->StatusOrders == 'Đã hủy')
+                <span class="badge badge-danger">Không thể thao tác</span>
+            @elseif ($order->StatusOrders == 'Hoàn thành')
+                        <div class="mb-1">Vui lòng đánh giá sản phẩm</div>
+                        <a href="{{ route('review.create', ['ProductID' => $product->ProductID, 'back_url' => url()->current()]) }}"
+                           class="btn btn-warning btn-sm mb-2">
+                            Đánh giá
+                        </a>
+            @else
+                <form action="{{ route('order.updateStatus', [$order->OrderID, 'Đã hủy']) }}" method="POST" style="display:inline-block; margin-bottom: 6px;">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger btn-sm" style="min-width: 110px;">
+                        <i class="fa fa-times-circle"></i> Hủy đơn
+                    </button>
+                </form>
+
+                <form action="{{ route('order.updateStatus', [$order->OrderID, 'Hoàn thành']) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-success btn-sm" style="min-width: 130px;">
+                        <i class="fa fa-check-circle"></i> Đã nhận
+                    </button>
+                </form>
+            @endif
         </td>
     </tr>
 @endforeach
+</tbody>
 
-
-            </tbody>
         </table>
     @endif
 </div>

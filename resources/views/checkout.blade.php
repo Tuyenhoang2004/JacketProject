@@ -167,7 +167,7 @@
         <form method="POST" action="{{ route('checkout.processPayment') }}">
             @csrf
     <div class="form-group">
-        <label>Phương thức thanh toán:</label><br>
+        <label><b>Phương thức thanh toán:</b></label><br>
         <label><input type="radio" name="payment_method" value="cod" required> Thanh toán khi nhận hàng (COD)</label><br>
         <label><input type="radio" name="payment_method" value="momo"> MoMo</label><br>
         <label><input type="radio" name="payment_method" value="bank_transfer"> Chuyển khoản ngân hàng</label>
